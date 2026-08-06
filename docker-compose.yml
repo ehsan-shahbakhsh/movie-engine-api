@@ -6,12 +6,34 @@ services:
         container_name: movie_app
         restart: unless-stopped
 #        command: sleep infinity # for installing initial dependencies
-#        depends_on:
-#            -
+        depends_on:
+            - db
         volumes:
             - .:/var/www
         ports:
             - "8000:8000"
+        environment:
+            DB_CONNECTION: mysql
+            DB_HOST: db
+            DB_DATABASE: movie_db
+            DB_USERNAME: root
+            DB_PASSWORD: root
+        networks:
+            - movie-net
+
+    db:
+        image: mysql:8.0
+        container_name: movie_db
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: movie_db
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - db-data:/var/lib/mysql
+        networks:
+            - movie-net
 
 networks:
     movie-net:
