@@ -1,0 +1,22 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: movie_app
+        restart: unless-stopped
+#        command: sleep infinity # for installing initial dependencies
+#        depends_on:
+#            -
+        volumes:
+            - .:/var/www
+        ports:
+            - "8000:8000"
+
+networks:
+    movie-net:
+        driver: bridge
+
+volumes:
+    db-data:
+        driver: local
