@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\MovieStatus;
 use Database\Factories\MovieFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -41,8 +42,15 @@ class Movie extends Model
     {
         return [
             'slug' => [
-                'source' => 'title'
+                'source' => 'slug_source'
             ]
         ];
+    }
+
+    protected function slugSource(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value, array $attributes) => $attributes['original_title'] ?? $attributes['title'],
+        );
     }
 }
