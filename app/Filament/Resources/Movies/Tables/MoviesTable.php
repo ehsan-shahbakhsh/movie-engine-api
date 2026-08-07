@@ -35,6 +35,11 @@ class MoviesTable
                     ->label('نامک (اسلاگ)')
                     ->toggleable(),
 
+                TextColumn::make('genres.name')
+                    ->badge()
+                    ->separator()
+                    ->label('ژانرهاا'),
+
                 TextColumn::make('release_year')
                     ->sortable()
                     ->label('سال انتشار')

@@ -21,6 +21,11 @@ class MovieInfolist
                 TextEntry::make('slug')
                     ->label('نامک (اسلاگ)'),
 
+                TextEntry::make('genres.name')
+                    ->badge()
+                    ->label('ژانرها')
+                    ->separator(),
+
                 TextEntry::make('synopsis')
                     ->placeholder('-')
                     ->columnSpanFull()

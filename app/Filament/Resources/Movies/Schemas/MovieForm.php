@@ -30,6 +30,12 @@ class MovieForm
                     ->label('نامک (اسلاگ)')
                     ->maxLength(255),
 
+                Select::make('genres')
+                    ->relationship('genres', 'name')
+                    ->label('ژانرها')
+                    ->multiple()
+                    ->preload(),
+
                 Textarea::make('synopsis')
                     ->columnSpanFull()
                     ->rows(4)

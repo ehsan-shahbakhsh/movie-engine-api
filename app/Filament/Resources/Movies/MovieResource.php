@@ -11,6 +11,7 @@ use App\Filament\Resources\Movies\Schemas\MovieInfolist;
 use App\Filament\Resources\Movies\Tables\MoviesTable;
 use App\Models\Movie;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -34,6 +35,11 @@ class MovieResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static string|UnitEnum|null $navigationGroup = 'کاتالوگ';
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('genres');
+    }
 
     public static function form(Schema $schema): Schema
     {
