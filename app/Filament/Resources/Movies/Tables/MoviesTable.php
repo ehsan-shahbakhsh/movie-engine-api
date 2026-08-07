@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Movies\Tables;
 
 use App\Enums\MovieStatus;
+use App\Filament\Shared\TableColumns;
 use App\Models\Movie;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -20,10 +21,7 @@ class MoviesTable
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('id')
-                    ->sortable()
-                    ->label('شناسه')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TableColumns::id(),
 
                 TextColumn::make('title')
                     ->label('عنوان فیلم')
@@ -61,18 +59,8 @@ class MoviesTable
                     ->label('وضعیت')
                     ->toggleable(),
 
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->label('تاریخ ایجاد')
-                    ->formatStateUsing(static fn($state) => verta($state)->formatDatetime())
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->label('تاریخ آخرین بروزرسانی')
-                    ->formatStateUsing(static fn($state) => verta($state)->formatDatetime())
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TableColumns::createdAt(),
+                TableColumns::updatedAt(),
             ])
             ->filters([
                 SelectFilter::make('status')
