@@ -16,6 +16,32 @@ final class TableColumns
             ->toggleable(isToggledHiddenByDefault: true);
     }
 
+    public static function name(string $name = 'name', string $label = 'نام'): TextColumn
+    {
+        return TextColumn::make($name)
+            ->searchable()
+            ->label($label)
+            ->toggleable();
+    }
+
+    public static function slug(): TextColumn
+    {
+        return TextColumn::make('slug')
+            ->searchable()
+            ->label('نامک (اسلاگ)')
+            ->toggleable();
+    }
+
+    public static function description(string $name = 'description', string $label = 'توضیحات'): TextColumn
+    {
+        return TextColumn::make($name)
+            ->searchable()
+            ->limit()
+            ->tooltip(static fn($state) => $state)
+            ->label($label)
+            ->toggleable();
+    }
+
     public static function sortOrder(string $name = 'sort_order', string $label = 'ترتیب نمایش'): TextInputColumn
     {
         return TextInputColumn::make($name)
