@@ -26,6 +26,7 @@ class Movie extends Model
         'release_date',
         'duration_minutes',
         'age_rating_id',
+        'original_language_id',
         'status',
     ];
 
@@ -44,6 +45,11 @@ class Movie extends Model
     public function ageRating(): BelongsTo
     {
         return $this->belongsTo(AgeRating::class);
+    }
+
+    public function originalLanguage(): BelongsTo
+    {
+        return $this->belongsTo(Language::class, 'original_language_id');
     }
 
     /**

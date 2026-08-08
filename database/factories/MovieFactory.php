@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\MovieStatus;
 use App\Models\AgeRating;
+use App\Models\Language;
 use App\Models\Movie;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -24,7 +25,7 @@ class MovieFactory extends Factory
         $originalTitle = fake()->boolean() ? fake()->sentence(3) : null;
         $slug = Str::slug($originalTitle ?? $title) . '-' . fake()->unique()->numberBetween(1, 999999);
 
-        $releaseDate = fake()->dateTimeBetween('1900-01-01', '2026-12-31');
+        $releaseDate = fake()->optional()->dateTimeBetween('1900-01-01', '2026-12-31');
 
         return [
             'title' => $title,
@@ -37,6 +38,7 @@ class MovieFactory extends Factory
             'duration_minutes' => fake()->boolean(90) ? fake()->numberBetween(30, 300) : null,
 
             'age_rating_id' => AgeRating::factory(),
+            'original_language_id' => Language::factory(),
 
             'status' => fake()->randomElement(MovieStatus::cases()),
         ];
