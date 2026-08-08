@@ -53,6 +53,11 @@ class MovieInfolist
                     ->color('info')
                     ->label('زبان اصلی'),
 
+                TextEntry::make('languages.name')
+                    ->badge()
+                    ->label('زبان‌ها')
+                    ->separator(),
+
                 TextEntry::make('status')
                     ->badge()
                     ->label('وضعیت'),
