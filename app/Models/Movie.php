@@ -52,6 +52,11 @@ class Movie extends Model
         return $this->belongsTo(Language::class, 'original_language_id');
     }
 
+    public function languages(): BelongsToMany
+    {
+        return $this->belongsToMany(Language::class);
+    }
+
     /**
      * Return the sluggable configuration array for this model.
      *
