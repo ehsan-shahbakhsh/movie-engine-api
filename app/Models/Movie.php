@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Movie extends Model
@@ -24,6 +25,7 @@ class Movie extends Model
         'release_year',
         'release_date',
         'duration_minutes',
+        'age_rating_id',
         'status',
     ];
 
@@ -37,6 +39,11 @@ class Movie extends Model
     public function genres(): BelongsToMany
     {
         return $this->belongsToMany(Genre::class);
+    }
+
+    public function ageRating(): BelongsTo
+    {
+        return $this->belongsTo(AgeRating::class);
     }
 
     /**

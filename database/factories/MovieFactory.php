@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\MovieStatus;
+use App\Models\AgeRating;
 use App\Models\Movie;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -34,6 +35,8 @@ class MovieFactory extends Factory
             'release_year' => $releaseDate?->year ?? fake()->numberBetween(1900, 2026),
             'release_date' => $releaseDate?->format('Y-m-d'),
             'duration_minutes' => fake()->boolean(90) ? fake()->numberBetween(30, 300) : null,
+
+            'age_rating_id' => AgeRating::factory(),
 
             'status' => fake()->randomElement(MovieStatus::cases()),
         ];
