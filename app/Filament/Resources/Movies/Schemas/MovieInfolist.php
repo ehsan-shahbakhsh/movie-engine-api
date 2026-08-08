@@ -44,6 +44,10 @@ class MovieInfolist
                     ->label('مدت زمان')
                     ->suffix(' دقیقه'),
 
+                TextEntry::make('ageRating.name')
+                    ->badge()
+                    ->label('رده سنی'),
+
                 TextEntry::make('status')
                     ->badge()
                     ->label('وضعیت'),

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Movies\Schemas;
 
 use App\Enums\MovieStatus;
+use App\Filament\Shared\FormComponents;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -53,6 +54,14 @@ class MovieForm
                     ->numeric()
                     ->label('مدت زمان')
                     ->suffix(' دقیقه'),
+
+                Select::make('ageRating')
+                    ->label('رده سنی')
+                    ->relationship('ageRating', 'name')
+                    ->preload()
+                    ->createOptionForm([
+                        FormComponents::name()->unique(),
+                    ]),
 
                 Select::make('status')
                     ->options(MovieStatus::class)

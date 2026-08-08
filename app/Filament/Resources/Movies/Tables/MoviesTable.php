@@ -38,7 +38,8 @@ class MoviesTable
                 TextColumn::make('genres.name')
                     ->badge()
                     ->separator()
-                    ->label('ژانرهاا'),
+                    ->label('ژانرها')
+                    ->toggleable(),
 
                 TextColumn::make('release_year')
                     ->sortable()
@@ -59,6 +60,11 @@ class MoviesTable
                     ->placeholder('-')
                     ->toggleable(),
 
+                TextColumn::make('ageRating.name')
+                    ->badge()
+                    ->label('رده سنی')
+                    ->toggleable(),
+
                 TextColumn::make('status')
                     ->badge()
                     ->label('وضعیت')
@@ -71,6 +77,11 @@ class MoviesTable
                 SelectFilter::make('status')
                     ->label('وضعیت')
                     ->options(MovieStatus::class)
+                    ->multiple(),
+
+                SelectFilter::make('ageRating')
+                    ->label('رده سنی')
+                    ->relationship('ageRating', 'name')
                     ->multiple(),
             ])
             ->recordActions([
