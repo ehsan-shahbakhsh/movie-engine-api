@@ -63,6 +63,11 @@ class MovieForm
                         FormComponents::name()->unique(),
                     ]),
 
+                Select::make('ageRating')
+                    ->label('زبان اصلی')
+                    ->relationship('originalLanguage', 'name')
+                    ->searchable(),
+
                 Select::make('status')
                     ->options(MovieStatus::class)
                     ->default(MovieStatus::Draft)

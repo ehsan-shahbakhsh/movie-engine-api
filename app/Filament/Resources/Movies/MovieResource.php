@@ -38,7 +38,7 @@ class MovieResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['genres', 'ageRating']);
+        return parent::getEloquentQuery()->with(['genres', 'ageRating', 'originalLanguage']);
     }
 
     public static function form(Schema $schema): Schema

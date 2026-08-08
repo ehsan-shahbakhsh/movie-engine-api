@@ -65,6 +65,12 @@ class MoviesTable
                     ->label('رده سنی')
                     ->toggleable(),
 
+                TextColumn::make('originalLanguage.name')
+                    ->badge()
+                    ->color('info')
+                    ->label('زبان اصلی')
+                    ->toggleable(),
+
                 TextColumn::make('status')
                     ->badge()
                     ->label('وضعیت')

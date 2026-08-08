@@ -48,6 +48,11 @@ class MovieInfolist
                     ->badge()
                     ->label('رده سنی'),
 
+                TextEntry::make('originalLanguage.name')
+                    ->badge()
+                    ->color('info')
+                    ->label('زبان اصلی'),
+
                 TextEntry::make('status')
                     ->badge()
                     ->label('وضعیت'),
