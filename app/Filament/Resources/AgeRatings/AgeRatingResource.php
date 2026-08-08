@@ -9,6 +9,7 @@ use App\Filament\Resources\AgeRatings\Schemas\AgeRatingForm;
 use App\Filament\Resources\AgeRatings\Tables\AgeRatingsTable;
 use App\Models\AgeRating;
 use BackedEnum;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -32,8 +33,6 @@ class AgeRatingResource extends Resource
     protected static ?int $navigationSort = 30;
 
     protected static string|UnitEnum|null $navigationGroup = 'کاتالوگ';
-
-    // TODO: add can delete and check doesn't have any movie
 
     public static function form(Schema $schema): Schema
     {
