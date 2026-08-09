@@ -57,6 +57,11 @@ class Movie extends Model
         return $this->belongsToMany(Language::class);
     }
 
+    public function countries(): BelongsToMany
+    {
+        return $this->belongsToMany(Country::class);
+    }
+
     /**
      * Return the sluggable configuration array for this model.
      *
