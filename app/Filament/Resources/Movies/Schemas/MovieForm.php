@@ -55,7 +55,7 @@ class MovieForm
                     ->label('مدت زمان')
                     ->suffix(' دقیقه'),
 
-                Select::make('ageRating')
+                Select::make('age_rating_id')
                     ->label('رده سنی')
                     ->relationship('ageRating', 'name')
                     ->preload()
@@ -63,7 +63,7 @@ class MovieForm
                         FormComponents::name()->unique(),
                     ]),
 
-                Select::make('originalLanguage')
+                Select::make('original_language_id')
                     ->label('زبان اصلی')
                     ->relationship('originalLanguage', 'name')
                     ->searchable()
