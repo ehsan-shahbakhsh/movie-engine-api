@@ -58,6 +58,11 @@ class MovieInfolist
                     ->label('زبان‌ها')
                     ->separator(),
 
+                TextEntry::make('countries.name')
+                    ->badge()
+                    ->label('کشورهای سازنده')
+                    ->separator(),
+
                 TextEntry::make('status')
                     ->badge()
                     ->label('وضعیت'),

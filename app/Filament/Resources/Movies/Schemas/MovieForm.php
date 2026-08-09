@@ -74,6 +74,14 @@ class MovieForm
                     ->label('زبان‌ها')
                     ->multiple(),
 
+                Select::make('countries')
+                    ->relationship('countries', 'name')
+                    ->label('کشورهای سازنده')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->optionsLimit(250),
+
                 Select::make('status')
                     ->options(MovieStatus::class)
                     ->default(MovieStatus::Draft)
