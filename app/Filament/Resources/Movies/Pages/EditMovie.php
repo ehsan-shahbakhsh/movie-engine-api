@@ -11,6 +11,11 @@ class EditMovie extends EditRecord
 {
     protected static string $resource = MovieResource::class;
 
+    protected function afterSave(): void
+    {
+        $this->record->languages()->syncWithoutDetaching([$this->record->original_language_id]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [
