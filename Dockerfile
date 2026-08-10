@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions pdo_mysql mbstring pcntl bcmath openswoole intl zip exif
+    install-php-extensions pdo_mysql mbstring pcntl bcmath openswoole intl zip exif gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
