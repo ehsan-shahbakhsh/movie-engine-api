@@ -8,9 +8,9 @@ use Filament\Tables\Columns\ToggleColumn;
 
 final class TableColumns
 {
-    public static function id(): TextColumn
+    public static function id(string $name = 'id'): TextColumn
     {
-        return TextColumn::make('id')
+        return TextColumn::make($name)
             ->sortable()
             ->label('شناسه')
             ->toggleable(isToggledHiddenByDefault: true);
@@ -63,9 +63,9 @@ final class TableColumns
             ->toggleable();
     }
 
-    public static function createdAt(): TextColumn
+    public static function createdAt(string $name = 'created_at'): TextColumn
     {
-        return TextColumn::make('created_at')
+        return TextColumn::make($name)
             ->dateTime()
             ->sortable()
             ->label('تاریخ ایجاد')
@@ -73,9 +73,9 @@ final class TableColumns
             ->toggleable(isToggledHiddenByDefault: true);
     }
 
-    public static function updatedAt(): TextColumn
+    public static function updatedAt(string $name = 'updated_at'): TextColumn
     {
-        return TextColumn::make('updated_at')
+        return TextColumn::make($name)
             ->dateTime()
             ->sortable()
             ->label('تاریخ آخرین بروزرسانی')
