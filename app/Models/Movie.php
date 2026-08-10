@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\Model;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Movie extends Model
+class Movie extends Model implements HasMedia
 {
     /** @use HasFactory<MovieFactory> */
     use HasFactory;
     use Sluggable;
+    use InteractsWithMedia;
 
     protected $fillable = [
         'title',
@@ -68,6 +72,52 @@ class Movie extends Model
             ->using(MoviePerson::class)
             ->withPivot(['department', 'job', 'character_name'])
             ->withTimestamps();
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('poster')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
+        $this
+            ->addMediaCollection('backdrop')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
+        $this
+            ->addMediaCollection('logo')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
+        $this->addMediaCollection('gallery')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(450)
+            ->format('webp')
+            ->sharpen(10)
+            ->performOnCollections('poster')
+            ->queued();
+
+        $this->addMediaConversion('medium')
+            ->width(500)
+            ->height(750)
+            ->format('webp')
+            ->performOnCollections('poster')
+            ->queued();
+
+        $this->addMediaConversion('backdrop')
+            ->width(1920)
+            ->height(1080)
+            ->format('webp')
+            ->performOnCollections('backdrop')
+            ->queued();
     }
 
     /**
