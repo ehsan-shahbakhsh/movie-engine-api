@@ -62,6 +62,14 @@ class Movie extends Model
         return $this->belongsToMany(Country::class);
     }
 
+    public function persons(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class)
+            ->using(MoviePerson::class)
+            ->withPivot(['department', 'job', 'character_name'])
+            ->withTimestamps();
+    }
+
     /**
      * Return the sluggable configuration array for this model.
      *
