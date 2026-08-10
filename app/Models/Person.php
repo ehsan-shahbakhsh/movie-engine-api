@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable(['name', 'original_name', 'slug', 'birth_date', 'death_date', 'biography'])]
 class Person extends Model
@@ -20,6 +21,14 @@ class Person extends Model
         'birth_date' => 'date',
         'death_date' => 'date',
     ];
+
+    public function movies(): BelongsToMany
+    {
+        return $this->belongsToMany(Movie::class)
+            ->using(MoviePerson::class)
+            ->withPivot(['department', 'job', 'character_name'])
+            ->withTimestamps();
+    }
 
     /**
      * Return the sluggable configuration array for this model.
