@@ -3,7 +3,11 @@
 namespace App\Models;
 
 use App\Enums\MovieStatus;
+use App\Http\Resources\Api\V1\MovieCollection;
+use App\Http\Resources\Api\V1\MovieResource;
 use Database\Factories\MovieFactory;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
+use Illuminate\Database\Eloquent\Attributes\UseResourceCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +18,8 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+#[UseResource(MovieResource::class)]
+#[UseResourceCollection(MovieCollection::class)]
 class Movie extends Model implements HasMedia
 {
     /** @use HasFactory<MovieFactory> */
