@@ -6,9 +6,12 @@ use App\Enums\MovieStatus;
 use App\Filament\Shared\FormComponents;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class MovieForm
 {
@@ -87,6 +90,44 @@ class MovieForm
                     ->default(MovieStatus::Draft)
                     ->required()
                     ->label('وضعیت'),
+
+                Section::make('تصاویر و رسانه‌ها')
+                    ->description('پوستر، تصویر پس‌زمینه، لوگو و گالری تصاویر فیلم را اینجا آپلود کنید.')
+                    ->icon(Heroicon::OutlinedPhoto)
+                    ->columns()
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('poster')
+                            ->label('پوستر فیلم (Poster)')
+                            ->collection('poster')
+                            ->image()
+                            ->imageEditor()
+                            ->required()
+                            ->columnSpan(1),
+
+                        SpatieMediaLibraryFileUpload::make('logo')
+                            ->label('لوگوی فیلم (Logo)')
+                            ->collection('logo')
+                            ->image()
+                            ->imageEditor()
+                            ->columnSpan(1),
+
+                        SpatieMediaLibraryFileUpload::make('backdrop')
+                            ->label('تصویر پس‌زمینه (Backdrop)')
+                            ->collection('backdrop')
+                            ->image()
+                            ->imageEditor()
+                            ->columnSpanFull(),
+
+                        SpatieMediaLibraryFileUpload::make('gallery')
+                            ->label('گالری تصاویر (Gallery)')
+                            ->collection('gallery')
+                            ->image()
+                            ->multiple()
+                            ->reorderable()
+                            ->panelLayout('grid')
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 }

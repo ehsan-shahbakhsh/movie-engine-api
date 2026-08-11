@@ -10,6 +10,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -22,6 +23,13 @@ class MoviesTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TableColumns::id(),
+
+                SpatieMediaLibraryImageColumn::make('poster')
+                    ->collection('poster')
+                    ->conversion('thumb')
+                    ->circular()
+                    ->label('پوستر')
+                    ->toggleable(),
 
                 TextColumn::make('title')
                     ->label('عنوان فیلم')

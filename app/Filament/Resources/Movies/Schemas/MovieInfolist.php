@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources\Movies\Schemas;
 
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class MovieInfolist
 {
@@ -78,6 +81,34 @@ class MovieInfolist
                     ->label('تاریخ آخرین بروزرسانی')
                     ->placeholder('-')
                     ->formatStateUsing(static fn($state) => verta($state)->formatDatetime()),
+
+                Section::make('تصاویر و رسانه‌ها')
+                    ->icon(Heroicon::OutlinedPhoto)
+                    ->columns()
+                    ->schema([
+                        SpatieMediaLibraryImageEntry::make('poster')
+                            ->collection('poster')
+                            ->conversion('medium')
+                            ->label('پوستر اصلی')
+                            ->columnSpan(1),
+
+                        SpatieMediaLibraryImageEntry::make('logo')
+                            ->collection('logo')
+                            ->label('لوگوی فیلم')
+                            ->columnSpan(1),
+
+                        SpatieMediaLibraryImageEntry::make('backdrop')
+                            ->collection('backdrop')
+                            ->conversion('backdrop')
+                            ->label('تصویر پس‌زمینه (Backdrop)')
+                            ->columnSpanFull(),
+
+                        SpatieMediaLibraryImageEntry::make('gallery')
+                            ->collection('gallery')
+                            ->label('گالری تصاویر')
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 }
