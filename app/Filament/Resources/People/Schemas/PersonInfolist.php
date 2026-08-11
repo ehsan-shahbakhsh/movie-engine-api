@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\People\Schemas;
 
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -20,6 +21,11 @@ class PersonInfolist
 
                 TextEntry::make('slug')
                     ->label('نامک (اسلاگ)'),
+
+                SpatieMediaLibraryImageEntry::make('profile')
+                    ->collection('profile')
+                    ->conversion('medium')
+                    ->label('پروفایل'),
 
                 TextEntry::make('birth_date')
                     ->date()

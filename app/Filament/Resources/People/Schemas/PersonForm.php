@@ -6,6 +6,7 @@ use App\Filament\Shared\FormComponents;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -22,6 +23,12 @@ class PersonForm
                 FormComponents::name('original_name', 'نام اصلی', false),
 
                 FormComponents::slug(),
+
+                SpatieMediaLibraryFileUpload::make('profile')
+                    ->label('پروفایل')
+                    ->collection('profile')
+                    ->image()
+                    ->imageEditor(),
 
                 Hidden::make('birth_date_is_jalali'),
                 Hidden::make('death_date_is_jalali'),
