@@ -26,7 +26,8 @@ class PeopleTable
                     ->collection('profile')
                     ->conversion('thumb')
                     ->circular()
-                    ->label('پروفایل'),
+                    ->label('پروفایل')
+                    ->toggleable(),
 
                 TableColumns::name(),
                 TableColumns::name('original_name', 'نام اصلی'),
