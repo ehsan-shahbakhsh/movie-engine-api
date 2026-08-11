@@ -85,19 +85,23 @@ class Movie extends Model implements HasMedia
         $this
             ->addMediaCollection('poster')
             ->singleFile()
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
 
         $this
             ->addMediaCollection('backdrop')
             ->singleFile()
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
 
         $this
             ->addMediaCollection('logo')
             ->singleFile()
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
 
         $this->addMediaCollection('gallery')
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
