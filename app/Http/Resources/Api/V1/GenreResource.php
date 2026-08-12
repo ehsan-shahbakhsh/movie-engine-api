@@ -4,7 +4,20 @@ namespace App\Http\Resources\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: "GenreResource",
+    title: "GenreResource",
+    description: "Genre resource",
+    required: ["id", "name", "slug"],
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "name", type: "string", example: "Comedy"),
+        new OA\Property(property: "slug", type: "string", example: "comedy"),
+        new OA\Property(property: "description", type: "string", example: "A genre of comedic films.", nullable: true),
+    ],
+)]
 class GenreResource extends JsonResource
 {
     /**
