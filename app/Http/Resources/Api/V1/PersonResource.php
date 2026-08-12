@@ -60,15 +60,15 @@ class PersonResource extends JsonResource
             'original_name' => $this->original_name,
             'slug' => $this->slug,
 
-            'profile' => $this->when($this->relationLoaded('media'), function () {
+            'profile' => $this->whenLoaded('media', function () {
                 $profile = $this->getFirstMedia('profile');
 
-                return [
+                return $profile ? [
                     'original' => $profile->getFullUrl(),
                     'thumb' => $profile->getFullUrl('thumb'),
                     'medium' => $profile->getFullUrl('medium'),
-                ];
-            }),
+                ] : null;
+            }, null),
 
             'department' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->department),
             'job' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->job),
