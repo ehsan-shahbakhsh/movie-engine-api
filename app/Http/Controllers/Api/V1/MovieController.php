@@ -64,8 +64,8 @@ class MovieController extends Controller
             ])
             ->where('slug', $slug)
             ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
-            ->firstOrFail();;
+            ->firstOrFail();
 
-        return ApiResponse::success($movie->toResource());
+        return ApiResponse::success($movie->toResource()->withMedia());
     }
 }
