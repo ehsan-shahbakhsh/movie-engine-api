@@ -30,7 +30,7 @@ class PersonResource extends JsonResource
                 ];
             }),
 
-            'department' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->department->getLabel()),
+            'department' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->department),
             'job' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->job),
             'character_name' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->character_name),
 
