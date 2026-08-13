@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Http\Resources\Api\V1\PersonCollection;
+use App\Http\Resources\Api\V1\PersonResource;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Database\Factories\PersonFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
+use Illuminate\Database\Eloquent\Attributes\UseResourceCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +17,8 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+#[UseResource(PersonResource::class)]
+#[UseResourceCollection(PersonCollection::class)]
 #[Fillable(['name', 'original_name', 'slug', 'birth_date', 'death_date', 'biography'])]
 class Person extends Model implements HasMedia
 {
