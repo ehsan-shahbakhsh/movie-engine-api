@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Http\Resources\Api\V1\GenreResource;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Database\Factories\GenreFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[UseResource(GenreResource::class)]
 #[Fillable(['name', 'slug', 'description', 'is_active', 'sort_order'])]
 class Genre extends Model
 {
