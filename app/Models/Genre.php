@@ -7,6 +7,7 @@ use Database\Factories\GenreFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable(['name', 'slug', 'description', 'is_active', 'sort_order'])]
 class Genre extends Model
@@ -19,6 +20,11 @@ class Genre extends Model
         'is_active' => 'boolean',
         'sort_order' => 'integer',
     ];
+
+    public function movies(): BelongsToMany
+    {
+        return $this->belongsToMany(Movie::class);
+    }
 
     /**
      * Return the sluggable configuration array for this model.
