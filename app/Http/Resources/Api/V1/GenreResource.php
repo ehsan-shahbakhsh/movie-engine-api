@@ -16,6 +16,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "name", type: "string", example: "Comedy"),
         new OA\Property(property: "slug", type: "string", example: "comedy"),
         new OA\Property(property: "description", type: "string", example: "A genre of comedic films.", nullable: true),
+        new OA\Property(property: "movies_count", type: "integer", example: 10),
     ],
 )]
 class GenreResource extends JsonResource
@@ -32,6 +33,8 @@ class GenreResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->whenHas('description'),
+
+            'movies_count' => $this->whenCounted('movies'),
         ];
     }
 }
