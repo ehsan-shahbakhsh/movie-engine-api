@@ -31,6 +31,8 @@ class PersonsRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                TableColumns::id(),
+
                 TableColumns::name(),
                 TableColumns::name('original_name', 'نام اصلی'),
 
