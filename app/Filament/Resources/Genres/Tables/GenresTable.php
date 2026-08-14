@@ -16,7 +16,7 @@ class GenresTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
-            ->reorderable()
+            ->reorderable('sort_order')
             ->columns([
                 TableColumns::id(),
 
