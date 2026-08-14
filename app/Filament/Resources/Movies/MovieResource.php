@@ -6,7 +6,7 @@ use App\Filament\Resources\Movies\Pages\CreateMovie;
 use App\Filament\Resources\Movies\Pages\EditMovie;
 use App\Filament\Resources\Movies\Pages\ListMovies;
 use App\Filament\Resources\Movies\Pages\ViewMovie;
-use App\Filament\Resources\Movies\RelationManagers\PersonsRelationManager;
+use App\Filament\Resources\Movies\RelationManagers\{PersonsRelationManager, VideosRelationManager};
 use App\Filament\Resources\Movies\Schemas\MovieForm;
 use App\Filament\Resources\Movies\Schemas\MovieInfolist;
 use App\Filament\Resources\Movies\Tables\MoviesTable;
@@ -61,6 +61,7 @@ class MovieResource extends Resource
     {
         return [
             PersonsRelationManager::class,
+            VideosRelationManager::class,
         ];
     }
 
