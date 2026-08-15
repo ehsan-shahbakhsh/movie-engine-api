@@ -173,6 +173,8 @@ class MovieController extends Controller
                 'countries',
                 'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
                 'persons' => static fn($query) => $query->select(['people.id', 'name', 'original_name', 'slug'])->with('media'),
+                'videos' => static fn($query) => $query->where('is_active', true)->orderBy('sort_order'),
+                'videos.media',
             ])
             ->where('slug', $slug)
             ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
