@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Movie, AgeRating, Language};
+use App\Models\{Movie, AgeRating, Language, Genre, Person, Video};
 use App\Enums\MovieStatus;
 
 it('returns a paginated list of movies', function () {
@@ -180,6 +180,9 @@ it('returns movie details correctly by slug', function () {
         ->count(2)
         ->for(AgeRating::factory()->state(['name' => 'PG-13']), 'ageRating')
         ->for(Language::factory()->state(['name' => 'Persian', 'code' => 'fa']), 'originalLanguage')
+        ->hasAttached(Genre::factory()->count(3), relationship: 'genres')
+        ->hasAttached(Person::factory()->count(3), relationship: 'persons')
+        ->has(Video::factory()->count(3), 'videos')
         ->sequence(
             ['title' => 'Test Movie', 'original_title' => 'Not Related 1', 'slug' => 'test-movie'],
             ['title' => 'Not Related 2', 'original_title' => 'Test 2', 'slug' => 'test-2'],
