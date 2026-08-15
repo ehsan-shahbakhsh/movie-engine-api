@@ -216,6 +216,9 @@ it('returns movie details correctly by slug', function () {
                 'persons' => [
                     '*' => ['id', 'name', 'original_name', 'slug', 'profile', 'department', 'job', 'character_name'],
                 ],
+                'videos' => [
+                    '*' => ['id', 'name', 'type', 'is_official', 'thumbnail', 'video'],
+                ],
                 'backdrop',
                 'logo',
                 'gallery',
