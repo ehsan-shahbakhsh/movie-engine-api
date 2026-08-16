@@ -42,6 +42,7 @@ class SeriesResource extends Resource
             'ageRating',
             'originalLanguage',
             'media' => static fn($query) => $query->where('collection_name', 'poster'),
+            'genres',
         ]);
     }
 

@@ -31,6 +31,12 @@ class SeriesForm
 
                 FormComponents::slug(),
 
+                Select::make('genres')
+                    ->relationship('genres', 'name')
+                    ->label('ژانرها')
+                    ->multiple()
+                    ->preload(),
+
                 TextInput::make('release_year')
                     ->required()
                     ->numeric()

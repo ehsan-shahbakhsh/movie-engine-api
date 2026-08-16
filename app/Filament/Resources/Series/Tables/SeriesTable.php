@@ -44,6 +44,12 @@ class SeriesTable
                     ->label('نامک (اسلاگ)')
                     ->toggleable(),
 
+                TextColumn::make('genres.name')
+                    ->badge()
+                    ->separator()
+                    ->label('ژانرها')
+                    ->toggleable(),
+
                 TextColumn::make('release_year')
                     ->sortable()
                     ->label('سال انتشار')
