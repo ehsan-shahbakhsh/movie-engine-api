@@ -69,6 +69,14 @@ class Series extends Model implements HasMedia
         return $this->belongsToMany(Country::class);
     }
 
+    public function persons(): BelongsToMany
+    {
+        return $this->belongsToMany(Person::class)
+            ->using(PersonSeries::class)
+            ->withPivot(['department', 'job', 'character_name'])
+            ->withTimestamps();
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('poster')
