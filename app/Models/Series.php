@@ -64,6 +64,11 @@ class Series extends Model implements HasMedia
         return $this->belongsToMany(Language::class);
     }
 
+    public function countries(): BelongsToMany
+    {
+        return $this->belongsToMany(Country::class);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('poster')
