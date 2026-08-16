@@ -40,6 +40,14 @@ class Person extends Model implements HasMedia
             ->withTimestamps();
     }
 
+    public function series(): BelongsToMany
+    {
+        return $this->belongsToMany(Series::class)
+            ->using(PersonSeries::class)
+            ->withPivot(['department', 'job', 'character_name'])
+            ->withTimestamps();
+    }
+
     public function registerMediaCollections(): void
     {
         $this
