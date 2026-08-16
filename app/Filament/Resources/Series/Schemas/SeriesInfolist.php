@@ -61,6 +61,11 @@ class SeriesInfolist
                     ->label('زبان‌ها')
                     ->separator(),
 
+                TextEntry::make('countries.name')
+                    ->badge()
+                    ->label('کشورهای سازنده')
+                    ->separator(),
+
                 TextEntry::make('publish_status')
                     ->badge()
                     ->label('وضعیت انتشار'),

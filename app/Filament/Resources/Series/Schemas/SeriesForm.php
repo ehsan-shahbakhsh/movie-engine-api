@@ -67,6 +67,14 @@ class SeriesForm
                     ->label('زبان‌ها')
                     ->multiple(),
 
+                Select::make('countries')
+                    ->relationship('countries', 'name')
+                    ->label('کشورهای سازنده')
+                    ->multiple()
+                    ->searchable()
+                    ->preload()
+                    ->optionsLimit(250),
+
                 Select::make('publish_status')
                     ->options(SeriesPublishStatus::class)
                     ->default(SeriesPublishStatus::Draft)
