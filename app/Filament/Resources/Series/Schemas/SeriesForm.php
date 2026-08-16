@@ -62,6 +62,11 @@ class SeriesForm
                     ->searchable()
                     ->required(),
 
+                Select::make('languages')
+                    ->relationship('languages', 'name')
+                    ->label('زبان‌ها')
+                    ->multiple(),
+
                 Select::make('publish_status')
                     ->options(SeriesPublishStatus::class)
                     ->default(SeriesPublishStatus::Draft)

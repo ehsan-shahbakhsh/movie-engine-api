@@ -56,6 +56,11 @@ class SeriesInfolist
                     ->color('info')
                     ->label('زبان اصلی'),
 
+                TextEntry::make('languages.name')
+                    ->badge()
+                    ->label('زبان‌ها')
+                    ->separator(),
+
                 TextEntry::make('publish_status')
                     ->badge()
                     ->label('وضعیت انتشار'),
