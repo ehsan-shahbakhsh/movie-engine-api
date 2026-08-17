@@ -4,9 +4,13 @@ namespace App\Models;
 
 use App\Enums\SeriesProductionStatus;
 use App\Enums\SeriesPublishStatus;
+use App\Http\Resources\Api\V1\SeriesCollection;
+use App\Http\Resources\Api\V1\SeriesResource;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Database\Factories\SeriesFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
+use Illuminate\Database\Eloquent\Attributes\UseResourceCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +21,8 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+#[UseResource(SeriesResource::class)]
+#[UseResourceCollection(SeriesCollection::class)]
 #[Fillable([
     'title',
     'original_title',
