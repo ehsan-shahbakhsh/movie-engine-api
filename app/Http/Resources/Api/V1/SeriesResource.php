@@ -57,6 +57,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "genres", type: "array", items: new OA\Items(ref: "#/components/schemas/GenreResource")),
         new OA\Property(property: "persons", type: "array", items: new OA\Items(ref: "#/components/schemas/PersonResource")),
         new OA\Property(property: "videos", type: "array", items: new OA\Items(ref: "#/components/schemas/VideoResource")),
+        new OA\Property(property: "seasons", type: "array", items: new OA\Items(ref: "#/components/schemas/SeasonResource")),
 
         new OA\Property(property: "backdrop", type: "string", example: "https://example.com/storage/1/conversions/backdrop.webp", nullable: true),
         new OA\Property(property: "logo", type: "string", example: "https://example.com/storage/1/logo.png", nullable: true),
@@ -121,6 +122,7 @@ class SeriesResource extends JsonResource
             'genres' => GenreResource::collection($this->whenLoaded('genres', default: [])),
             'persons' => PersonResource::collection($this->whenLoaded('persons')),
             'videos' => VideoResource::collection($this->whenLoaded('videos')),
+            'seasons' => SeasonResource::collection($this->whenLoaded('seasons')),
 
             'backdrop' => $this->when(
                 $this->relationLoaded('media') && $this->showMedia,
