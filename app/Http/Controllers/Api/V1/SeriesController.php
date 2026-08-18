@@ -176,6 +176,7 @@ class SeriesController extends Controller
                 'persons' => static fn($query) => $query->select(['people.id', 'name', 'original_name', 'slug'])->with('media'),
                 'videos' => static fn($query) => $query->where('is_active', true)->orderBy('sort_order'),
                 'videos.media',
+                'seasons',
             ])
             ->where('slug', $slug)
             ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
