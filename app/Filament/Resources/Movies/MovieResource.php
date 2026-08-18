@@ -6,7 +6,9 @@ use App\Filament\Resources\Movies\Pages\CreateMovie;
 use App\Filament\Resources\Movies\Pages\EditMovie;
 use App\Filament\Resources\Movies\Pages\ListMovies;
 use App\Filament\Resources\Movies\Pages\ViewMovie;
-use App\Filament\Resources\Movies\RelationManagers\{PersonsRelationManager, VideosRelationManager};
+use App\Filament\Resources\Movies\RelationManagers\{DownloadGroupsRelationManager,
+    PersonsRelationManager,
+    VideosRelationManager};
 use App\Filament\Resources\Movies\Schemas\MovieForm;
 use App\Filament\Resources\Movies\Schemas\MovieInfolist;
 use App\Filament\Resources\Movies\Tables\MoviesTable;
@@ -39,7 +41,7 @@ class MovieResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->with(['genres', 'ageRating', 'originalLanguage']);
+        return parent::getEloquentQuery()->with(['genres', 'ageRating', 'originalLanguage', 'downloadGroups']);
     }
 
     public static function form(Schema $schema): Schema
@@ -60,6 +62,7 @@ class MovieResource extends Resource
     public static function getRelations(): array
     {
         return [
+            DownloadGroupsRelationManager::class,
             PersonsRelationManager::class,
             VideosRelationManager::class,
         ];
