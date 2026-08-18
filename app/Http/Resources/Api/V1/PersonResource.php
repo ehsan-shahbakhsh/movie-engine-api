@@ -70,9 +70,21 @@ class PersonResource extends JsonResource
                 ] : null;
             }, null),
 
-            'department' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->department),
-            'job' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->job),
-            'character_name' => $this->whenPivotLoaded('movie_person', fn() => $this->pivot->character_name),
+            $this->mergeWhen($this->relationLoaded('pivot') && $this->pivot->getTable() === 'movie_person', function () {
+                return [
+                    'department' => $this->pivot->department,
+                    'job' => $this->pivot->job,
+                    'character_name' => $this->pivot->character_name,
+                ];
+            }),
+
+            $this->mergeWhen($this->relationLoaded('pivot') && $this->pivot->getTable() === 'person_series', function () {
+                return [
+                    'department' => $this->pivot->department,
+                    'job' => $this->pivot->job,
+                    'character_name' => $this->pivot->character_name,
+                ];
+            }),
 
             'birth_date' => $this->whenHas('birth_date'),
             'death_date' => $this->whenHas('death_date'),
