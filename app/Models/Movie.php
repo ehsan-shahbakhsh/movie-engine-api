@@ -86,6 +86,11 @@ class Movie extends Model implements HasMedia
         return $this->morphMany(Video::class, 'videoable');
     }
 
+    public function downloadGroups(): MorphMany
+    {
+        return $this->morphMany(DownloadGroup::class, 'downloadable');
+    }
+
     public function registerMediaCollections(): void
     {
         $this
