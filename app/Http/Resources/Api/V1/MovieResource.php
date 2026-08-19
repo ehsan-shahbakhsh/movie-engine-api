@@ -67,6 +67,8 @@ use OpenApi\Attributes as OA;
                 "https://example.com/storage/1/gallery-2.png",
             ],
         ),
+
+        new OA\Property(property: "download_groups", type: "array", items: new OA\Items(ref: "#/components/schemas/DownloadGroupResource")),
     ],
 )]
 class MovieResource extends JsonResource
@@ -131,6 +133,8 @@ class MovieResource extends JsonResource
                 $this->relationLoaded('media') && $this->showMedia,
                 fn() => $this->getMedia('gallery')->map(static fn($media) => $media->getFullUrl()),
             ),
+
+            'download_groups' => DownloadGroupResource::collection($this->whenLoaded('downloadGroups')),
         ];
     }
 }
