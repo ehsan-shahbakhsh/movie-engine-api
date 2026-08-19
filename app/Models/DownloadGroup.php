@@ -6,6 +6,7 @@ use Database\Factories\DownloadGroupFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['downloadable_id', 'downloadable_type', 'title', 'sort_order', 'is_active'])]
 class DownloadGroup extends Model
@@ -17,4 +18,9 @@ class DownloadGroup extends Model
         'sort_order' => 'integer',
         'is_active' => 'boolean',
     ];
+
+    public function downloadLinks(): HasMany
+    {
+        return $this->hasMany(DownloadLink::class);
+    }
 }
