@@ -10,6 +10,9 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -37,6 +40,41 @@ class DownloadGroupsRelationManager extends RelationManager
 
                 FormComponents::sortOrder(),
                 FormComponents::status(),
+
+                Repeater::make('downloadLinks')
+                    ->label('لینک‌های دانلود')
+                    ->relationship()
+                    ->schema([
+                        Select::make('quality_id')
+                            ->relationship('quality', 'name')
+                            ->required()
+                            ->label('کیفیت'),
+
+                        Select::make('encoder_id')
+                            ->relationship('encoder', 'name')
+                            ->label('انکودر'),
+
+                        Select::make('codec_id')
+                            ->relationship('codec', 'name')
+                            ->label('کدک'),
+
+                        SpatieMediaLibraryFileUpload::make('video')
+                            ->collection('video')
+                            ->label('فایل ویدیو')
+                            ->acceptedFileTypes([
+                                'video/mp4',
+                                'video/webm',
+                                'video/ogg',
+                                'video/quicktime',
+                                'video/x-msvideo',
+                                'video/x-matroska',
+                                'video/x-flv',
+                            ])
+                            ->required(),
+                    ])
+                    ->columns(2)
+                    ->addActionLabel('افزودن کیفیت جدید')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -52,6 +90,12 @@ class DownloadGroupsRelationManager extends RelationManager
                 TextColumn::make('title')
                     ->searchable()
                     ->label('عنوان')
+                    ->toggleable(),
+
+                TextColumn::make('download_links_count')
+                    ->sortable()
+                    ->counts('downloadLinks')
+                    ->label('تعداد لینک‌های دانلود')
                     ->toggleable(),
 
                 TableColumns::sortOrder(),
