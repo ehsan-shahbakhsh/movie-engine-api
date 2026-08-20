@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Series\Resources\Seasons;
 
 use App\Filament\Resources\Series\Resources\Seasons\Pages\CreateSeason;
 use App\Filament\Resources\Series\Resources\Seasons\Pages\EditSeason;
+use App\Filament\Resources\Series\Resources\Seasons\RelationManagers\EpisodesRelationManager;
 use App\Filament\Resources\Series\Resources\Seasons\Schemas\SeasonForm;
 use App\Filament\Resources\Series\Resources\Seasons\Tables\SeasonsTable;
 use App\Filament\Resources\Series\SeriesResource;
@@ -43,7 +44,7 @@ class SeasonResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            EpisodesRelationManager::class,
         ];
     }
 
