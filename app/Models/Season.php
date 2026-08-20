@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[UseResource(SeasonResource::class)]
 #[Fillable(['series_id', 'season_number', 'title', 'release_date', 'end_date'])]
@@ -21,4 +22,9 @@ class Season extends Model
         'release_date' => 'date',
         'end_date' => 'date',
     ];
+
+    public function series(): BelongsTo
+    {
+        return $this->belongsTo(Series::class);
+    }
 }
