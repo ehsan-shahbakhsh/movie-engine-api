@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Movie, AgeRating, Language, Genre, Person, Video};
+use App\Models\{Movie, AgeRating, Language, Genre, Person, Video, DownloadGroup, DownloadLink};
 use App\Enums\MovieStatus;
 
 it('returns a paginated list of movies', function () {
@@ -183,6 +183,12 @@ it('returns movie details correctly by slug', function () {
         ->hasAttached(Genre::factory()->count(3), relationship: 'genres')
         ->hasAttached(Person::factory()->count(3), relationship: 'persons')
         ->has(Video::factory()->count(3), 'videos')
+        ->has(
+            DownloadGroup::factory()
+                ->has(DownloadLink::factory(), 'downloadLinks')
+                ->state(['is_active' => true]),
+            'downloadGroups',
+        )
         ->sequence(
             ['title' => 'Test Movie', 'original_title' => 'Not Related 1', 'slug' => 'test-movie'],
             ['title' => 'Not Related 2', 'original_title' => 'Test 2', 'slug' => 'test-2'],
@@ -225,6 +231,15 @@ it('returns movie details correctly by slug', function () {
                 'backdrop',
                 'logo',
                 'gallery',
+                'download_groups' => [
+                    '*' => [
+                        'id',
+                        'title',
+                        'download_links' => [
+                            '*' => ['id', 'quality', 'encoder', 'codec', 'size_in_bytes', 'human_readable_size', 'video'],
+                        ],
+                    ],
+                ],
             ],
             'meta',
             'errors',
