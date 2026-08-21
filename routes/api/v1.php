@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\{
     PersonController,
     SeriesController,
     RegisterController,
+    LoginController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -21,4 +22,5 @@ Route::get('series/{series:slug}', [SeriesController::class, 'show']);
 
 Route::prefix('auth')->group(function () {
     Route::post('register', RegisterController::class);
+    Route::post('login', LoginController::class);
 });
