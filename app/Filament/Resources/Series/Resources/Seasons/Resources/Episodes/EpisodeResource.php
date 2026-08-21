@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes;
 use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\Pages\CreateEpisode;
 use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\Pages\EditEpisode;
 use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\Pages\ViewEpisode;
+use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\RelationManagers\DownloadGroupsRelationManager;
 use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\Schemas\EpisodeForm;
 use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\Schemas\EpisodeInfolist;
 use App\Filament\Resources\Series\Resources\Seasons\Resources\Episodes\Tables\EpisodesTable;
@@ -50,7 +51,7 @@ class EpisodeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            DownloadGroupsRelationManager::class,
         ];
     }
 
