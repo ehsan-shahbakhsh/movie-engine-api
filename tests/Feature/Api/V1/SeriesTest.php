@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Series, AgeRating, Language, Genre, Person, Video, Season};
+use App\Models\{Series, AgeRating, Language, Genre, Person, Video, Season, Episode, DownloadGroup, DownloadLink};
 use App\Enums\SeriesPublishStatus;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
@@ -189,8 +189,17 @@ it('returns series details correctly by slug', function () {
         ->has(Video::factory()->count(3), 'videos')
         ->has(
             Season::factory()
-                ->count(3)
-                ->sequence(static fn(Sequence $sequence) => ['season_number' => $sequence->index + 1]),
+                ->sequence(static fn(Sequence $sequence) => ['season_number' => $sequence->index + 1])
+                ->has(
+                    Episode::factory()
+                        ->has(
+                            DownloadGroup::factory()
+                                ->has(DownloadLink::factory(), 'downloadLinks')
+                                ->state(['is_active' => true]),
+                            'downloadGroups',
+                        ),
+                    'episodes',
+                ),
             'seasons',
         )
         ->sequence(
@@ -234,7 +243,32 @@ it('returns series details correctly by slug', function () {
                     '*' => ['id', 'name', 'type', 'is_official', 'thumbnail', 'video'],
                 ],
                 'seasons' => [
-                    '*' => ['id', 'season_number', 'title', 'release_date', 'end_date'],
+                    '*' => [
+                        'id',
+                        'season_number',
+                        'title',
+                        'release_date',
+                        'end_date',
+                        'episodes' => [
+                            '*' => [
+                                'id',
+                                'episode_number',
+                                'title',
+                                'synopsis',
+                                'air_date',
+                                'duration_minutes',
+                                'download_groups' => [
+                                    '*' => [
+                                        'id',
+                                        'title',
+                                        'download_links' => [
+                                            '*' => ['id', 'quality', 'encoder', 'codec', 'size_in_bytes', 'human_readable_size', 'video'],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
                 'backdrop',
                 'logo',
