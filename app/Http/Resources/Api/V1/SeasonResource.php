@@ -23,6 +23,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "title", type: "string", example: "فصل اول", nullable: true),
         new OA\Property(property: "release_date", type: "string", format: "date", example: "2011-04-17", nullable: true),
         new OA\Property(property: "end_date", type: "string", format: "date", example: "2011-06-19", nullable: true),
+        new OA\Property(property: "episodes", type: "array", items: new OA\Items(ref: "#/components/schemas/EpisodeResource")),
     ],
 )]
 class SeasonResource extends JsonResource
@@ -40,6 +41,7 @@ class SeasonResource extends JsonResource
             'title' => $this->title,
             'release_date' => $this->release_date,
             'end_date' => $this->end_date,
+            'episodes' => EpisodeResource::collection($this->whenLoaded('episodes')),
         ];
     }
 }
