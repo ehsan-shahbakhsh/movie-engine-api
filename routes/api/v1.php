@@ -1,7 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\V1\{MovieController, GenreController, PersonController, SeriesController};
+use App\Http\Controllers\Api\V1\{
+    MovieController,
+    GenreController,
+    PersonController,
+    SeriesController,
+    RegisterController,
+};
 
 Route::get('movies', [MovieController::class, 'index']);
 Route::get('movies/{movie:slug}', [MovieController::class, 'show']);
@@ -12,3 +18,7 @@ Route::get('persons', PersonController::class);
 
 Route::get('series', [SeriesController::class, 'index']);
 Route::get('series/{series:slug}', [SeriesController::class, 'show']);
+
+Route::prefix('auth')->group(function () {
+    Route::post('register', RegisterController::class);
+});
