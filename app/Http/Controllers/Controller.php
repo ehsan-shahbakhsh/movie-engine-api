@@ -9,6 +9,13 @@ use OpenApi\Attributes as OA;
     description: "Official API documentation for the Movie Engine backend architecture.",
     title: "Movie Engine API",
 )]
+#[OA\SecurityScheme(
+    securityScheme: "sanctum",
+    type: "apiKey",
+    description: "Enter token in format (Bearer <token>)",
+    name: "Authorization",
+    in: "header"
+)]
 abstract class Controller
 {
     //
