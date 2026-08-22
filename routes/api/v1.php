@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\{
     SeriesController,
     RegisterController,
     LoginController,
+    MeController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -22,5 +23,9 @@ Route::get('series/{series:slug}', [SeriesController::class, 'show']);
 
 Route::prefix('auth')->group(function () {
     Route::post('register', RegisterController::class);
-    Route::post('login', LoginController::class);
+    Route::post('login', LoginController::class); // TODO: add rate limit
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('me', MeController::class);
+    });
 });
