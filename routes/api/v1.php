@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\{
     RegisterController,
     LoginController,
     MeController,
+    LogoutController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -27,5 +28,6 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', MeController::class);
+        Route::post('logout', LogoutController::class);
     });
 });
