@@ -27,7 +27,7 @@ class RegisterController extends Controller
 
         $userToken = $user->createToken('Auth Token', expiresAt: $expirationTime);
 
-        return ApiResponse::success([
+        return ApiResponse::created([
             'user' => UserResource::make($user),
             'authorization' => [
                 'access_token' => $userToken->plainTextToken,
