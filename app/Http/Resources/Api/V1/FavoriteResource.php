@@ -6,7 +6,27 @@ use App\Models\Movie;
 use App\Models\Series;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: "FavoriteResource",
+    title: "FavoriteResource",
+    description: "Favorite resource",
+    required: [
+        "id",
+        "type",
+        "created_at",
+    ],
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "type", type: "string", example: "movie", enum: ["movie", "series"]),
+        new OA\Property(property: "item", oneOf: [
+            new OA\Schema(ref: "#/components/schemas/MovieResource"),
+            new OA\Schema(ref: "#/components/schemas/SeriesResource"),
+        ]),
+        new OA\Property(property: "created_at", type: "string", format: "date-time", example: "2026-01-01T00:00:00Z"),
+    ],
+)]
 class FavoriteResource extends JsonResource
 {
     /**
