@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\{
     MeController,
     LogoutController,
     FavoriteController,
+    WatchlistController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -35,4 +36,6 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
+
+    Route::apiResource('watchlists', WatchlistController::class)->only(['index', 'store', 'destroy']);
 });
