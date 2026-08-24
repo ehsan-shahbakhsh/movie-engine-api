@@ -4,7 +4,16 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: "StoreWatchlistRequest",
+    required: ["id", "type"],
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "type", type: "string", example: "movie", enum: ["movie", "series"]),
+    ]
+)]
 class StoreWatchlistRequest extends FormRequest
 {
     /**
