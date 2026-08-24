@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V1\{
     LoginController,
     MeController,
     LogoutController,
+    FavoriteController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -30,4 +31,8 @@ Route::prefix('auth')->group(function () {
         Route::get('me', MeController::class);
         Route::post('logout', LogoutController::class);
     });
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
 });
