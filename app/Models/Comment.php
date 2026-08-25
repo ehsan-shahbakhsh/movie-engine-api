@@ -51,4 +51,15 @@ class Comment extends Model
     {
         return $this->morphTo();
     }
+
+    public function approvedReplies(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'parent_id')
+            ->where('status', CommentStatus::Approved);
+    }
+
+    public function allApprovedReplies(): HasMany
+    {
+        return $this->approvedReplies()->with(['user', 'allApprovedReplies']);
+    }
 }
