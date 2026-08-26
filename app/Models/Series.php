@@ -95,6 +95,11 @@ class Series extends Model implements HasMedia
         return $this->hasMany(Season::class);
     }
 
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('poster')
