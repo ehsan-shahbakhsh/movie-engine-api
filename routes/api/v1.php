@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\{
     WatchlistController,
     MovieCommentController,
     SeriesCommentController,
+    CommentController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -46,5 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('verified')->group(function () {
         Route::post('movies/{movie:slug}/comments', [MovieCommentController::class, 'store']);
         Route::post('series/{series:slug}/comments', [SeriesCommentController::class, 'store']);
+        Route::delete('comments/{comment}', [CommentController::class, 'destroy']);
     });
 });
