@@ -49,4 +49,11 @@ class CommentFactory extends Factory
             'commentable_type' => $parent->commentable_type,
         ]);
     }
+
+    public function approved(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'status' => CommentStatus::Approved,
+        ]);
+    }
 }
