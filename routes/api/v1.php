@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\V1\{
     LogoutController,
     FavoriteController,
     WatchlistController,
+    MovieCommentController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -34,8 +35,13 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+Route::get('movies/{movie:slug}/comments', [MovieCommentController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
-
     Route::apiResource('watchlists', WatchlistController::class)->only(['index', 'store', 'destroy']);
+
+    Route::middleware('verified')->group(function () {
+        Route::post('movies/{movie:slug}/comments', [MovieCommentController::class, 'store']);
+    });
 });
