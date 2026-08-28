@@ -200,12 +200,9 @@ class MovieCommentController extends Controller
             ),
         ],
     )]
-    public function store(StoreMovieCommentRequest $request, string $slug)
+    public function store(StoreMovieCommentRequest $request)
     {
-        $movie = Movie::query()
-            ->where('slug', $slug)
-            ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
-            ->firstOrFail();
+        $movie = $request->movie;
 
         $validated = $request->validated();
 

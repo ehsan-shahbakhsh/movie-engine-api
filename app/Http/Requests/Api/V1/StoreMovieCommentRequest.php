@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\V1;
 
 use App\Enums\CommentStatus;
+use App\Enums\MovieStatus;
 use App\Models\Movie;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,12 +21,22 @@ use OpenApi\Attributes as OA;
 )]
 class StoreMovieCommentRequest extends FormRequest
 {
+    public ?Movie $movie;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return true;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->movie = Movie::query()
+            ->where('slug', $this->route('movie'))
+            ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
+            ->firstOrFail();
     }
 
     /**
@@ -41,7 +52,7 @@ class StoreMovieCommentRequest extends FormRequest
                 'nullable',
                 'integer',
                 Rule::exists('comments', 'id')
-                    ->where('commentable_id', $this->route('movie')->id)
+                    ->where('commentable_id', $this->movie->id)
                     ->where('commentable_type', Movie::class)
                     ->where('status', CommentStatus::Approved),
             ],
