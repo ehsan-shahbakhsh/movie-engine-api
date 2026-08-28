@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\CommentStatus;
+use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreMovieCommentRequest;
 use App\Http\Responses\ApiResponse;
@@ -88,8 +89,13 @@ class MovieCommentController extends Controller
             ),
         ],
     )]
-    public function index(Movie $movie)
+    public function index(string $slug)
     {
+        $movie = Movie::query()
+            ->where('slug', $slug)
+            ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
+            ->firstOrFail();
+
         $comments = $movie
             ->comments()
             ->with(['user', 'allApprovedReplies'])
@@ -194,8 +200,13 @@ class MovieCommentController extends Controller
             ),
         ],
     )]
-    public function store(StoreMovieCommentRequest $request, Movie $movie)
+    public function store(StoreMovieCommentRequest $request, string $slug)
     {
+        $movie = Movie::query()
+            ->where('slug', $slug)
+            ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
+            ->firstOrFail();
+
         $validated = $request->validated();
 
         $movie->comments()->create([

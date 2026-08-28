@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\CommentStatus;
+use App\Enums\SeriesPublishStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreSeriesCommentRequest;
 use App\Http\Responses\ApiResponse;
@@ -88,8 +89,13 @@ class SeriesCommentController extends Controller
             ),
         ],
     )]
-    public function index(Series $series)
+    public function index(string $slug)
     {
+        $series = Series::query()
+            ->where('slug', $slug)
+            ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
+            ->firstOrFail();
+
         $comments = $series
             ->comments()
             ->with(['user', 'allApprovedReplies'])
@@ -194,8 +200,13 @@ class SeriesCommentController extends Controller
             ),
         ],
     )]
-    public function store(StoreSeriesCommentRequest $request, Series $series)
+    public function store(StoreSeriesCommentRequest $request, string $slug)
     {
+        $series = Series::query()
+            ->where('slug', $slug)
+            ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
+            ->firstOrFail();
+
         $validated = $request->validated();
 
         $series->comments()->create([
