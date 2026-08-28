@@ -7,7 +7,17 @@ use App\Models\Movie;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    schema: "StoreMovieCommentRequest",
+    required: ["body", "is_spoiler"],
+    properties: [
+        new OA\Property(property: "body", type: "string", example: "این فیلم فوق‌العاده بود!"),
+        new OA\Property(property: "reply_to", type: "integer", example: 1, nullable: true),
+        new OA\Property(property: "is_spoiler", type: "boolean", example: false),
+    ]
+)]
 class StoreMovieCommentRequest extends FormRequest
 {
     /**
