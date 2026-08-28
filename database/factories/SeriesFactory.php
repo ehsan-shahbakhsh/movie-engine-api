@@ -52,4 +52,11 @@ class SeriesFactory extends Factory
             'production_status' => $productionStatus,
         ];
     }
+
+    public function published(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'publish_status' => SeriesPublishStatus::Published,
+        ]);
+    }
 }
