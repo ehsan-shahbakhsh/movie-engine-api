@@ -200,12 +200,9 @@ class SeriesCommentController extends Controller
             ),
         ],
     )]
-    public function store(StoreSeriesCommentRequest $request, string $slug)
+    public function store(StoreSeriesCommentRequest $request)
     {
-        $series = Series::query()
-            ->where('slug', $slug)
-            ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
-            ->firstOrFail();
+        $series = $request->series;
 
         $validated = $request->validated();
 
