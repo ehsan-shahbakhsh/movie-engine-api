@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\{
     FavoriteController,
     WatchlistController,
     MovieCommentController,
+    SeriesCommentController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -36,6 +37,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::get('movies/{movie:slug}/comments', [MovieCommentController::class, 'index']);
+Route::get('series/{series:slug}/comments', [SeriesCommentController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
@@ -43,5 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('verified')->group(function () {
         Route::post('movies/{movie:slug}/comments', [MovieCommentController::class, 'store']);
+        Route::post('series/{series:slug}/comments', [SeriesCommentController::class, 'store']);
     });
 });
