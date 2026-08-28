@@ -43,4 +43,11 @@ class MovieFactory extends Factory
             'status' => fake()->randomElement(MovieStatus::cases()),
         ];
     }
+
+    public function published(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'status' => MovieStatus::Published,
+        ]);
+    }
 }
