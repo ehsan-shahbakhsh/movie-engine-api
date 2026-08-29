@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: "StoreMovieCommentRequest",
+    schema: "StoreSeriesCommentRequest",
     required: ["body", "is_spoiler"],
     properties: [
         new OA\Property(property: "body", type: "string", example: "این سریال فوق‌العاده بود!"),
