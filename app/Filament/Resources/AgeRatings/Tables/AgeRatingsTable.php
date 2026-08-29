@@ -40,6 +40,17 @@ class AgeRatingsTable
 
                             $action->halt();
                         }
+
+                        if ($record->series()->exists()) {
+                            Notification::make()
+                                ->danger()
+                                ->title('امکان حذف وجود ندارد')
+                                ->body("این رده سنی به {$record->series()->count()} سریال متصل است و ابتدا باید ارتباط آن‌ها را بردارید.")
+                                ->persistent()
+                                ->send();
+
+                            $action->halt();
+                        }
                     }),
             ])
             ->toolbarActions([
