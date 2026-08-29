@@ -35,7 +35,7 @@ class LoginController extends Controller
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: true),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_OK),
-                        new OA\Property(property: "message", type: "string", example: "Success"),
+                        new OA\Property(property: "message", type: "string", example: "ورود با موفقیت انجام شد."),
                         new OA\Property(property: "data", properties: [
                             new OA\Property(property: "user", ref: "#/components/schemas/UserResource"),
                             new OA\Property(property: "authorization", properties: [
@@ -99,7 +99,7 @@ class LoginController extends Controller
         $userToken = $user->createToken('Auth Token', expiresAt: $expirationTime);
 
         return ApiResponse::success([
-            'user' => UserResource::make($user),
+            'user' => UserResource::make($user), // todo: use toResource
             'authorization' => [
                 'access_token' => $userToken->plainTextToken,
                 'token_type' => 'Bearer',
