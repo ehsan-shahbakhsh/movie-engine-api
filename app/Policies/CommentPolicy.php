@@ -9,6 +9,18 @@ use Illuminate\Auth\Access\Response;
 class CommentPolicy
 {
     /**
+     * Perform pre-authorization checks.
+     */
+    public function before(User $user, string $ability): ?bool
+    {
+        if ($user->is_admin) {
+            return true;
+        }
+
+        return null;
+    }
+
+    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
@@ -45,7 +57,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->is_admin;
+        return $user->id === $comment->user_id;
     }
 
     /**
