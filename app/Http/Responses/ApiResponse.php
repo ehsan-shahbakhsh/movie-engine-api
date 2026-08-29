@@ -75,7 +75,7 @@ final class ApiResponse implements Responsable
         string  $message,
         int     $code = ResponseCode::HTTP_BAD_REQUEST,
         ?array  $errors = null,
-        int     $httpStatus = null,
+        ?int     $httpStatus = null,
         ?string $errorCode = null,
     ): self
     {
