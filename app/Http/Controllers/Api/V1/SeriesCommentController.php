@@ -121,6 +121,14 @@ class SeriesCommentController extends Controller
             content: new OA\JsonContent(ref: "#/components/schemas/StoreSeriesCommentRequest"),
         ),
         tags: ["Comments"],
+        parameters: [
+            new OA\Parameter(
+                name: "slug",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "string"),
+            ),
+        ],
         responses: [
             new OA\Response(
                 response: Response::HTTP_CREATED,
