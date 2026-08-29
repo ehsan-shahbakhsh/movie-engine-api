@@ -6,6 +6,7 @@ use App\Enums\MovieStatus;
 use App\Http\Resources\Api\V1\MovieCollection;
 use App\Http\Resources\Api\V1\MovieResource;
 use Database\Factories\MovieFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Attributes\UseResourceCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -21,25 +22,24 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 #[UseResource(MovieResource::class)]
 #[UseResourceCollection(MovieCollection::class)]
+#[Fillable([
+    'title',
+    'original_title',
+    'slug',
+    'synopsis',
+    'release_year',
+    'release_date',
+    'duration_minutes',
+    'age_rating_id',
+    'original_language_id',
+    'status',
+])]
 class Movie extends Model implements HasMedia
 {
     /** @use HasFactory<MovieFactory> */
     use HasFactory;
     use Sluggable;
     use InteractsWithMedia;
-
-    protected $fillable = [
-        'title',
-        'original_title',
-        'slug',
-        'synopsis',
-        'release_year',
-        'release_date',
-        'duration_minutes',
-        'age_rating_id',
-        'original_language_id',
-        'status',
-    ];
 
     protected $casts = [
         'release_year' => 'integer',
