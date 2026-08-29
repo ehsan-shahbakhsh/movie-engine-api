@@ -18,4 +18,9 @@ class AgeRating extends Model
     {
         return $this->hasMany(Movie::class);
     }
+
+    public function series(): HasMany
+    {
+        return $this->hasMany(Series::class);
+    }
 }
