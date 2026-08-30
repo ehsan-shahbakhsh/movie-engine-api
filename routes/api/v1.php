@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\{
     MovieCommentController,
     SeriesCommentController,
     CommentController,
+    ReactionController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -43,6 +44,9 @@ Route::get('series/{series:slug}/comments', [SeriesCommentController::class, 'in
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('favorites', FavoriteController::class)->only(['index', 'store', 'destroy']);
     Route::apiResource('watchlists', WatchlistController::class)->only(['index', 'store', 'destroy']);
+
+    Route::post('reactions/like', [ReactionController::class, 'like']);
+    Route::post('reactions/dislike', [ReactionController::class, 'dislike']);
 
     Route::middleware('verified')->group(function () {
         Route::post('movies/{movie:slug}/comments', [MovieCommentController::class, 'store']);
