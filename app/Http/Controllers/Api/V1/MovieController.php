@@ -162,7 +162,7 @@ class MovieController extends Controller
             ),
         ],
     )]
-    public function show(string $slug)
+    public function show(Request $request, string $slug)
     {
         $movie = Movie::query()
             ->with([
@@ -178,9 +178,14 @@ class MovieController extends Controller
                 'downloadGroups' => static fn($query) => $query->where('is_active', true)->orderBy('sort_order'),
                 'downloadGroups.downloadLinks' => static fn($query) => $query->with(['quality', 'encoder', 'codec', 'media']),
             ])
+            ->withCount(['likes', 'dislikes'])
             ->where('slug', $slug)
             ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
             ->firstOrFail();
+
+        $movie->user_reaction = $request->user('sanctum')
+            ? $movie->reactions()->where('user_id', $request->user()->id)->value('type')
+            : null;
 
         return ApiResponse::success($movie->toResource()->withMedia());
     }

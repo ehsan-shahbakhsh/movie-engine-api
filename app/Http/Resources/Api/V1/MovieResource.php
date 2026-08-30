@@ -69,6 +69,10 @@ use OpenApi\Attributes as OA;
         ),
 
         new OA\Property(property: "download_groups", type: "array", items: new OA\Items(ref: "#/components/schemas/DownloadGroupResource")),
+
+        new OA\Property(property: "likes_count", type: "integer", example: 1),
+        new OA\Property(property: "dislikes_count", type: "integer", example: 1),
+        new OA\Property(property: "user_reaction", type: "string", example: "like", nullable: true, enum: ["like", "dislike"]),
     ],
 )]
 class MovieResource extends JsonResource
@@ -135,6 +139,10 @@ class MovieResource extends JsonResource
             ),
 
             'download_groups' => DownloadGroupResource::collection($this->whenLoaded('downloadGroups')),
+
+            'likes_count' => $this->whenCounted('likes'),
+            'dislikes_count' => $this->whenCounted('dislikes'),
+            'user_reaction' => $this->whenHas('user_reaction'),
         ];
     }
 }
