@@ -15,7 +15,7 @@ it('returns a paginated list of movies', function () {
     $response
         ->assertOk()
         ->assertJsonCount(15, 'data.items')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -75,7 +75,7 @@ it('excludes draft and archived movies from the list', function () {
         ->assertJsonCount(10, 'data.items')
         ->assertJsonMissing(['status' => MovieStatus::Draft])
         ->assertJsonMissing(['status' => MovieStatus::Archived])
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -135,7 +135,7 @@ it('can search movies by title and original title', function () {
         ->assertJsonCount(2, 'data.items')
         ->assertJsonPath('data.items.0.title', 'Test Movie')
         ->assertJsonPath('data.items.1.original_title', 'Test 2')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -200,7 +200,7 @@ it('returns movie details correctly by slug', function () {
     $response
         ->assertOk()
         ->assertJsonPath('data.title', 'Test Movie')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -240,6 +240,9 @@ it('returns movie details correctly by slug', function () {
                         ],
                     ],
                 ],
+                'likes_count',
+                'dislikes_count',
+                'user_reaction',
             ],
             'meta',
             'errors',
@@ -262,7 +265,7 @@ it('returns 404 if movie does not exist', function () {
 
     $response
         ->assertNotFound()
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -283,7 +286,7 @@ it('returns 404 for draft and archived movies', function (MovieStatus $status, s
 
     $response
         ->assertNotFound()
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
