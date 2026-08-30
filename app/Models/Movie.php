@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\MovieStatus;
+use App\Enums\ReactionType;
 use App\Http\Resources\Api\V1\MovieCollection;
 use App\Http\Resources\Api\V1\MovieResource;
 use Database\Factories\MovieFactory;
@@ -94,6 +95,21 @@ class Movie extends Model implements HasMedia
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function reactions(): MorphMany
+    {
+        return $this->morphMany(Reaction::class, 'reactionable');
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->reactions()->where('type', ReactionType::Like);
+    }
+
+    public function dislikes(): MorphMany
+    {
+        return $this->reactions()->where('type', ReactionType::Dislike);
     }
 
     public function registerMediaCollections(): void
