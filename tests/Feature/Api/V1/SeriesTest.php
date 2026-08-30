@@ -16,7 +16,7 @@ it('returns a paginated list of series', function () {
     $response
         ->assertOk()
         ->assertJsonCount(15, 'data.items')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -77,7 +77,7 @@ it('excludes draft and archived series from the list', function () {
         ->assertJsonCount(10, 'data.items')
         ->assertJsonMissing(['publish_status' => SeriesPublishStatus::Draft])
         ->assertJsonMissing(['publish_status' => SeriesPublishStatus::Archived])
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -138,7 +138,7 @@ it('can search series by title and original title', function () {
         ->assertJsonCount(2, 'data.items')
         ->assertJsonPath('data.items.0.title', 'Test Series')
         ->assertJsonPath('data.items.1.original_title', 'Test 2')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -213,7 +213,7 @@ it('returns series details correctly by slug', function () {
     $response
         ->assertOk()
         ->assertJsonPath('data.title', 'Test Series')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -273,6 +273,9 @@ it('returns series details correctly by slug', function () {
                 'backdrop',
                 'logo',
                 'gallery',
+                'likes_count',
+                'dislikes_count',
+                'user_reaction',
             ],
             'meta',
             'errors',
@@ -295,7 +298,7 @@ it('returns 404 if series does not exist', function () {
 
     $response
         ->assertNotFound()
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -316,7 +319,7 @@ it('returns 404 for draft and archived series', function (SeriesPublishStatus $s
 
     $response
         ->assertNotFound()
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
