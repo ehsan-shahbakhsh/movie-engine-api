@@ -70,6 +70,10 @@ use OpenApi\Attributes as OA;
                 "https://example.com/storage/1/gallery-2.png",
             ],
         ),
+
+        new OA\Property(property: "likes_count", type: "integer", example: 1),
+        new OA\Property(property: "dislikes_count", type: "integer", example: 1),
+        new OA\Property(property: "user_reaction", type: "string", example: "like", nullable: true, enum: ["like", "dislike"]),
     ],
 )]
 class SeriesResource extends JsonResource
@@ -136,6 +140,10 @@ class SeriesResource extends JsonResource
                 $this->relationLoaded('media') && $this->showMedia,
                 fn() => $this->getMedia('gallery')->map(static fn($media) => $media->getFullUrl()),
             ),
+
+            'likes_count' => $this->whenCounted('likes'),
+            'dislikes_count' => $this->whenCounted('dislikes'),
+            'user_reaction' => $this->whenHas('user_reaction'),
         ];
     }
 }

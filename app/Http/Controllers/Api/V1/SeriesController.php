@@ -163,7 +163,7 @@ class SeriesController extends Controller
             ),
         ],
     )]
-    public function show(string $slug)
+    public function show(Request $request, string $slug)
     {
         $series = Series::query()
             ->with([
@@ -178,9 +178,14 @@ class SeriesController extends Controller
                 'videos.media',
                 'seasons.episodes.downloadGroups.downloadLinks' => static fn($query) => $query->with(['quality', 'encoder', 'codec', 'media']),
             ])
+            ->withCount(['likes', 'dislikes'])
             ->where('slug', $slug)
             ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
             ->firstOrFail();
+
+        $series->user_reaction = $request->user('sanctum')
+            ? $series->reactions()->where('user_id', $request->user()->id)->value('type')
+            : null;
 
         return ApiResponse::success($series->toResource()->withMedia());
     }
