@@ -7,7 +7,10 @@ use App\Enums\SeriesPublishStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreSeriesCommentRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Comment;
+use App\Models\Reaction;
 use App\Models\Series;
+use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -89,7 +92,7 @@ class SeriesCommentController extends Controller
             ),
         ],
     )]
-    public function index(string $slug)
+    public function index(Request $request, string $slug)
     {
         $series = Series::query()
             ->where('slug', $slug)
@@ -98,7 +101,17 @@ class SeriesCommentController extends Controller
 
         $comments = $series
             ->comments()
+            ->when($request->user('sanctum'), static function ($query, $user) {
+                $query->addSelect([
+                    'user_reaction' => Reaction::query()
+                        ->select('type')
+                        ->whereColumn('reactionable_id', 'comments.id')
+                        ->where('reactionable_type', Comment::class)
+                        ->where('user_id', $user->id),
+                ]);
+            })
             ->with(['user', 'allApprovedReplies'])
+            ->withCount(['likes', 'dislikes'])
             ->whereNull('parent_id')
             ->where('status', CommentStatus::Approved)
             ->latest()

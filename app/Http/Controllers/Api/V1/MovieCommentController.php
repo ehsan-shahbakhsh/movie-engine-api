@@ -7,7 +7,10 @@ use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreMovieCommentRequest;
 use App\Http\Responses\ApiResponse;
+use App\Models\Comment;
 use App\Models\Movie;
+use App\Models\Reaction;
+use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -89,7 +92,7 @@ class MovieCommentController extends Controller
             ),
         ],
     )]
-    public function index(string $slug)
+    public function index(Request $request, string $slug)
     {
         $movie = Movie::query()
             ->where('slug', $slug)
@@ -98,11 +101,26 @@ class MovieCommentController extends Controller
 
         $comments = $movie
             ->comments()
+            ->when($request->user('sanctum'), static function ($query, $user) {
+                $query->addSelect([
+                    'user_reaction' => Reaction::query()
+                        ->select('type')
+                        ->whereColumn('reactionable_id', 'comments.id')
+                        ->where('reactionable_type', Comment::class)
+                        ->where('user_id', $user->id),
+                ]);
+            })
             ->with(['user', 'allApprovedReplies'])
+            ->withCount(['likes', 'dislikes'])
             ->whereNull('parent_id')
             ->where('status', CommentStatus::Approved)
             ->latest()
-            ->paginate();
+            ->paginate()
+            ->map(static function (Comment $comment) {
+                $comment->user_reaction ??= null;
+
+                return $comment;
+            });
 
         return ApiResponse::success($comments->toResourceCollection());
     }

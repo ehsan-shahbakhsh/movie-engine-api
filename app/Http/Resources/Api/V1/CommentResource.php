@@ -18,6 +18,9 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "is_official", type: "boolean", example: false),
         new OA\Property(property: "is_spoiler", type: "boolean", example: false),
         new OA\Property(property: "replies", type: "array", items: new OA\Items(ref: "#/components/schemas/CommentResource")),
+        new OA\Property(property: "likes_count", type: "integer", example: 1),
+        new OA\Property(property: "dislikes_count", type: "integer", example: 1),
+        new OA\Property(property: "user_reaction", type: "string", example: "like", nullable: true, enum: ["like", "dislike"]),
         new OA\Property(property: "created_at", type: "string", format: "date-time", example: "2026-01-01T00:00:00Z"),
     ],
 )]
@@ -41,6 +44,10 @@ class CommentResource extends JsonResource
             'is_spoiler' => $this->is_spoiler,
 
             'replies' => CommentResource::collection($this->whenLoaded('allApprovedReplies', default: [])),
+
+            'likes_count' => $this->whenCounted('likes'),
+            'dislikes_count' => $this->whenCounted('dislikes'),
+            'user_reaction' => $this->whenHas('user_reaction'),
 
             'created_at' => $this->created_at,
         ];
