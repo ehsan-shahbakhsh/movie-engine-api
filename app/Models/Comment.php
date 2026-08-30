@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CommentStatus;
+use App\Enums\ReactionType;
 use App\Http\Resources\Api\V1\CommentCollection;
 use App\Http\Resources\Api\V1\CommentResource;
 use Database\Factories\CommentFactory;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 #[UseResource(CommentResource::class)]
@@ -67,5 +69,20 @@ class Comment extends Model
     public function allApprovedReplies(): HasMany
     {
         return $this->approvedReplies()->with(['user', 'allApprovedReplies']);
+    }
+
+    public function reactions(): MorphMany
+    {
+        return $this->morphMany(Reaction::class, 'reactionable');
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->reactions()->where('type', ReactionType::Like);
+    }
+
+    public function dislikes(): MorphMany
+    {
+        return $this->reactions()->where('type', ReactionType::Dislike);
     }
 }
