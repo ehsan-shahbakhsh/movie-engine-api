@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReactionType;
 use App\Enums\SeriesProductionStatus;
 use App\Enums\SeriesPublishStatus;
 use App\Http\Resources\Api\V1\SeriesCollection;
@@ -98,6 +99,21 @@ class Series extends Model implements HasMedia
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function reactions(): MorphMany
+    {
+        return $this->morphMany(Reaction::class, 'reactionable');
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->reactions()->where('type', ReactionType::Like);
+    }
+
+    public function dislikes(): MorphMany
+    {
+        return $this->reactions()->where('type', ReactionType::Dislike);
     }
 
     public function registerMediaCollections(): void
