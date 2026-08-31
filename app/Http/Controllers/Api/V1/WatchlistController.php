@@ -78,6 +78,7 @@ class WatchlistController extends Controller
                 response: Response::HTTP_UNAUTHORIZED,
                 description: "Unauthorized",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_UNAUTHORIZED),
@@ -187,6 +188,7 @@ class WatchlistController extends Controller
                 response: Response::HTTP_NOT_FOUND,
                 description: "Not found",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_NOT_FOUND),
@@ -202,6 +204,7 @@ class WatchlistController extends Controller
                 response: Response::HTTP_CONFLICT,
                 description: "Conflict",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_CONFLICT),
@@ -217,6 +220,7 @@ class WatchlistController extends Controller
                 response: Response::HTTP_UNAUTHORIZED,
                 description: "Unauthorized",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_UNAUTHORIZED),
@@ -232,6 +236,7 @@ class WatchlistController extends Controller
                 response: Response::HTTP_UNPROCESSABLE_ENTITY,
                 description: "Validation error",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_UNPROCESSABLE_ENTITY),

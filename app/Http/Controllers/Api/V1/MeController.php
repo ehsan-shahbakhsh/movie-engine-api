@@ -40,6 +40,7 @@ class MeController extends Controller
                 response: Response::HTTP_UNAUTHORIZED,
                 description: "Unauthorized",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_UNAUTHORIZED),

@@ -54,6 +54,7 @@ class RegisterController extends Controller
                 response: Response::HTTP_UNPROCESSABLE_ENTITY,
                 description: "Validation error",
                 content: new OA\JsonContent(
+                    required: ["success", "code", "message", "data", "meta", "errors", "error_code"],
                     properties: [
                         new OA\Property(property: "success", type: "boolean", example: false),
                         new OA\Property(property: "code", type: "integer", example: Response::HTTP_UNPROCESSABLE_ENTITY),
