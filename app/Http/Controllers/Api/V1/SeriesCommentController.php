@@ -115,7 +115,12 @@ class SeriesCommentController extends Controller
             ->whereNull('parent_id')
             ->where('status', CommentStatus::Approved)
             ->latest()
-            ->paginate();
+            ->paginate()
+            ->through(static function (Comment $comment) {
+                $comment->user_reaction ??= null;
+
+                return $comment;
+            });
 
         return ApiResponse::success($comments->toResourceCollection());
     }
