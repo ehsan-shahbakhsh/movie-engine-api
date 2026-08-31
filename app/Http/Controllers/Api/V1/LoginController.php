@@ -101,7 +101,7 @@ class LoginController extends Controller
         $userToken = $user->createToken('Auth Token', expiresAt: $expirationTime);
 
         return ApiResponse::success([
-            'user' => UserResource::make($user), // todo: use toResource
+            'user' => $user->toResource(),
             'authorization' => [
                 'access_token' => $userToken->plainTextToken,
                 'token_type' => 'Bearer',
