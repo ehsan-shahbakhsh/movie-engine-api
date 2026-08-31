@@ -116,7 +116,7 @@ class MovieCommentController extends Controller
             ->where('status', CommentStatus::Approved)
             ->latest()
             ->paginate()
-            ->map(static function (Comment $comment) {
+            ->through(static function (Comment $comment) {
                 $comment->user_reaction ??= null;
 
                 return $comment;
