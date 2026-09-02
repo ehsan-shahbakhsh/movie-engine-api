@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Auth\SendEmailVerificationNotificationAction;
+use App\Exceptions\Auth\EmailAlreadyVerifiedException;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
@@ -12,6 +14,7 @@ class VerificationNotificationController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @throws EmailAlreadyVerifiedException
      */
     #[OA\Post(
         path: "/api/v1/auth/email/verification-notification",
@@ -70,13 +73,9 @@ class VerificationNotificationController extends Controller
             ),
         ]
     )]
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, SendEmailVerificationNotificationAction $action)
     {
-        if ($request->user()->hasVerifiedEmail()) {
-            return ApiResponse::badRequest('ایمیل شما قبلاً تایید شده است.');
-        }
-
-        $request->user()->sendEmailVerificationNotification();
+        $action->execute($request->user());
 
         return ApiResponse::success(message: 'لینک تایید ایمیل با موفقیت ارسال شد.');
     }
