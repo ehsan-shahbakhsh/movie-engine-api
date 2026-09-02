@@ -6,6 +6,7 @@ use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Genre;
+use App\Queries\Genre\GetGenresQuery;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,7 +39,7 @@ class GenreController extends Controller
             ),
         ],
     )]
-    public function __invoke()
+    public function __invoke(GetGenresQuery $query)
     {
         $genres = Genre::query()
             ->where('is_active', true)
