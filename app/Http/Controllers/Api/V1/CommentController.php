@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Comment\DestroyCommentAction;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Comment;
@@ -90,11 +91,11 @@ class CommentController extends Controller
             ),
         ],
     )]
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment, DestroyCommentAction $action)
     {
         Gate::authorize('delete', $comment);
 
-        $comment->delete();
+        $action->execute($comment);
 
         return ApiResponse::deleted('نظر شما با موفقیت حذف شد.');
     }

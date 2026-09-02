@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Comment\CreateCommentAction;
 use App\Enums\CommentStatus;
 use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
@@ -231,18 +232,14 @@ class MovieCommentController extends Controller
             ),
         ],
     )]
-    public function store(StoreMovieCommentRequest $request)
+    public function store(StoreMovieCommentRequest $request, CreateCommentAction $action)
     {
         $movie = $request->movie;
 
         $validated = $request->validated();
+        $user = $request->user();
 
-        $movie->comments()->create([
-            'user_id' => $request->user()->id,
-            'body' => $validated['body'],
-            'parent_id' => $validated['reply_to'] ?? null,
-            'is_spoiler' => $validated['is_spoiler'],
-        ]);
+        $action->execute($user, $movie, $validated['body'], $validated['reply_to'] ?? null, $validated['is_spoiler']);
 
         return ApiResponse::created(message: 'نظر شما با موفقیت ثبت شد و پس از تأیید مدیر نمایش داده خواهد شد.');
     }

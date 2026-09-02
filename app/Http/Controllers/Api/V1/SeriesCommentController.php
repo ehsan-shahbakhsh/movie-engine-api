@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Comment\CreateCommentAction;
 use App\Enums\CommentStatus;
 use App\Enums\SeriesPublishStatus;
 use App\Http\Controllers\Controller;
@@ -231,18 +232,14 @@ class SeriesCommentController extends Controller
             ),
         ],
     )]
-    public function store(StoreSeriesCommentRequest $request)
+    public function store(StoreSeriesCommentRequest $request, CreateCommentAction $action)
     {
         $series = $request->series;
 
         $validated = $request->validated();
+        $user = $request->user();
 
-        $series->comments()->create([
-            'user_id' => $request->user()->id,
-            'body' => $validated['body'],
-            'parent_id' => $validated['reply_to'] ?? null,
-            'is_spoiler' => $validated['is_spoiler'],
-        ]);
+        $action->execute($user, $series, $validated['body'], $validated['reply_to'] ?? null, $validated['is_spoiler']);
 
         return ApiResponse::created(message: 'نظر شما با موفقیت ثبت شد و پس از تأیید مدیر نمایش داده خواهد شد.');
     }
