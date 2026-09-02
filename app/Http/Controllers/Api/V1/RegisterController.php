@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Auth\RegisterAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\RegisterRequest;
 use App\Http\Responses\ApiResponse;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -68,28 +67,19 @@ class RegisterController extends Controller
             ),
         ],
     )]
-    public function __invoke(RegisterRequest $request)
+    public function __invoke(RegisterRequest $request, RegisterAction $action)
     {
         $validated = $request->validated();
 
-        $user = User::query()->create($validated);
-
-        event(new Registered($user));
-
-        $expirationMinutes = config('sanctum.expiration');
-        $expirationTime = $expirationMinutes ? now()->addMinutes($expirationMinutes) : null;
-
-        $userToken = $user->createToken('Auth Token', expiresAt: $expirationTime);
+        $result = $action->execute($validated['name'], $validated['email'], $validated['password']);
 
         return ApiResponse::created([
-            'user' => $user->toResource(),
+            'user' => $result->user->toResource(),
             'authorization' => [
-                'access_token' => $userToken->plainTextToken,
-                'token_type' => 'Bearer',
-                'expires_in' => $expirationMinutes
-                    ? $expirationMinutes * 60
-                    : null,
-                'expires_at' => $expirationTime,
+                'access_token' => $result->authorization->accessToken,
+                'token_type' => $result->authorization->tokenType,
+                'expires_in' => $result->authorization->expiresIn,
+                'expires_at' => $result->authorization->expiresAt,
             ],
         ], 'ثبت‌نام با موفقیت انجام شد. لطفاً ایمیل خود را تأیید کنید.');
     }
