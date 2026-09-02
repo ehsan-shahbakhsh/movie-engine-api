@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\V1\{
     SeriesCommentController,
     CommentController,
     ReactionController,
+    VerificationNotificationController,
 };
 
 Route::get('movies', [MovieController::class, 'index']);
@@ -33,6 +34,8 @@ Route::prefix('auth')->group(function () {
     Route::post('login', LoginController::class); // TODO: add rate limit
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('email/verification-notification', VerificationNotificationController::class)->middleware('throttle:1,10');
+
         Route::get('me', MeController::class);
         Route::post('logout', LogoutController::class);
     });
