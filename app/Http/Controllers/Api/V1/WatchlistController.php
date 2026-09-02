@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Watchlist\CreateWatchlistAction;
+use App\Actions\Watchlist\DestroyWatchlistAction;
+use App\Exceptions\Watchlist\WatchlistAlreadyExistsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreWatchlistRequest;
 use App\Http\Responses\ApiResponse;
@@ -15,11 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class WatchlistController extends Controller
 {
-    private const array MORPH_MAP = [
-        'movie' => Movie::class,
-        'series' => Series::class,
-    ];
-
     /**
      * Display a listing of the resource.
      */
@@ -155,6 +153,7 @@ class WatchlistController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @throws WatchlistAlreadyExistsException
      */
     #[OA\Post(
         path: "/api/v1/watchlists",
@@ -250,33 +249,12 @@ class WatchlistController extends Controller
             ),
         ],
     )]
-    public function store(StoreWatchlistRequest $request)
+    public function store(StoreWatchlistRequest $request, CreateWatchlistAction $action)
     {
         $validated = $request->validated();
-
         $user = $request->user();
-        $id = $validated['id'];
-        $type = $validated['type'];
-        $modelClass = static::MORPH_MAP[$type];
 
-        $modelClass::findOrFail($id);
-
-        $watchlist = $user->watchlists()
-            ->where('watchable_id', $id)
-            ->where('watchable_type', $modelClass)
-            ->first();
-
-        if ($watchlist) {
-            return ApiResponse::error(
-                message: 'این آیتم از قبل در لیست تماشای شما وجود دارد.',
-                code: Response::HTTP_CONFLICT,
-            );
-        }
-
-        $user->watchlists()->create([
-            'watchable_id' => $id,
-            'watchable_type' => $modelClass,
-        ]);
+        $action->execute($user, $validated['id'], $validated['type']);
 
         return ApiResponse::created(message: 'آیتم به لیست تماشا اضافه شد.');
     }
@@ -357,11 +335,11 @@ class WatchlistController extends Controller
             ),
         ],
     )]
-    public function destroy(Watchlist $watchlist)
+    public function destroy(Watchlist $watchlist, DestroyWatchlistAction $action)
     {
         Gate::authorize('delete', $watchlist);
 
-        $watchlist->delete();
+        $action->execute($watchlist);
 
         return ApiResponse::deleted('آیتم با موفقیت از لیست تماشا حذف شد.');
     }
