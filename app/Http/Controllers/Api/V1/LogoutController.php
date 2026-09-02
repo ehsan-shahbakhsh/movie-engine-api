@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Auth\LogoutAction;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
@@ -54,9 +55,9 @@ class LogoutController extends Controller
             ),
         ],
     )]
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, LogoutAction $action)
     {
-        $request->user()->currentAccessToken()->delete();
+        $action->execute($request->user());
 
         return ApiResponse::success(message: 'با موفقیت از حساب خارج شدید.');
     }
