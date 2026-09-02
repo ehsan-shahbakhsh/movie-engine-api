@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Enums\SeriesPublishStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
-use App\Models\Series;
+use App\Queries\Series\GetSeriesListQuery;
+use App\Queries\Series\GetSeriesQuery;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,37 +75,14 @@ class SeriesController extends Controller
             ),
         ],
     )]
-    public function index(Request $request)
+    public function index(Request $request, GetSeriesListQuery $query)
     {
-        $series = Series::query()
-            ->select([
-                'id',
-                'title',
-                'original_title',
-                'slug',
-                'release_year',
-                'release_date',
-                'end_date',
-                'publish_status',
-                'production_status',
-                'original_language_id',
-                'age_rating_id',
-            ])
-            ->with([
-                'media' => static fn($query) => $query->where('collection_name', 'poster'),
-                'ageRating',
-                'originalLanguage',
-                'countries',
-                'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
-            ])
-            ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
-            ->when($request->filled('search'), static fn($query) => $query->where(static function ($query) use ($request) {
-                $search = $request->search;
-                $query->where('title', 'like', "%$search%")
-                    ->orWhere('original_title', 'like', "%$search%");
-            }))
-            ->latest()
-            ->paginate();
+        $page = $request->input('page');
+
+        $series = $query->execute(
+            $request->input('search'),
+            filter_var($page, FILTER_VALIDATE_INT) !== false ? (int)$page : 1,
+        );
 
         return ApiResponse::success($series->toResourceCollection());
     }
@@ -163,29 +140,9 @@ class SeriesController extends Controller
             ),
         ],
     )]
-    public function show(Request $request, string $slug)
+    public function show(Request $request, string $slug, GetSeriesQuery $query)
     {
-        $series = Series::query()
-            ->with([
-                'media',
-                'ageRating',
-                'originalLanguage',
-                'languages',
-                'countries',
-                'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
-                'persons' => static fn($query) => $query->select(['people.id', 'name', 'original_name', 'slug'])->with('media'),
-                'videos' => static fn($query) => $query->where('is_active', true)->orderBy('sort_order'),
-                'videos.media',
-                'seasons.episodes.downloadGroups.downloadLinks' => static fn($query) => $query->with(['quality', 'encoder', 'codec', 'media']),
-            ])
-            ->withCount(['likes', 'dislikes'])
-            ->where('slug', $slug)
-            ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
-            ->firstOrFail();
-
-        $series->user_reaction = $request->user('sanctum')
-            ? $series->reactions()->where('user_id', $request->user()->id)->value('type')
-            : null;
+        $series = $query->execute($slug, $request->user());
 
         return ApiResponse::success($series->toResource()->withMedia());
     }
