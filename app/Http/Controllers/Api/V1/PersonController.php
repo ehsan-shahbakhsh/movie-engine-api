@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
-use App\Models\Person;
+use App\Queries\Person\GetPersonsQuery;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,16 +74,14 @@ class PersonController extends Controller
             ),
         ],
     )]
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, GetPersonsQuery $query)
     {
-        $persons = Person::query()
-            ->with('media')
-            ->when($request->filled('search'), static function ($query) use ($request) {
-                $search = $request->search;
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('original_name', 'like', "%$search%");
-            })
-            ->paginate();
+        $page = $request->input('page');
+
+        $persons = $query->execute(
+            $request->input('search'),
+            filter_var($page, FILTER_VALIDATE_INT) !== false ? (int)$page : 1,
+        );
 
         return ApiResponse::success($persons->toResourceCollection());
     }
