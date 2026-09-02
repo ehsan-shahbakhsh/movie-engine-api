@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Auth\LoginAction;
+use App\Exceptions\Auth\InvalidCredentialsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\LoginRequest;
-use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Responses\ApiResponse;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,6 +14,7 @@ class LoginController extends Controller
 {
     /**
      * Handle the incoming request.
+     * @throws InvalidCredentialsException
      */
     #[OA\Post(
         path: "/api/v1/auth/login",
@@ -85,30 +85,19 @@ class LoginController extends Controller
             ),
         ],
     )]
-    public function __invoke(LoginRequest $request)
+    public function __invoke(LoginRequest $request, LoginAction $action)
     {
         $validated = $request->validated();
 
-        $user = User::query()->firstWhere('email', $validated['email']);
-
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
-            return ApiResponse::unauthorized(__('auth.failed'));
-        }
-
-        $expirationMinutes = config('sanctum.expiration');
-        $expirationTime = $expirationMinutes ? now()->addMinutes($expirationMinutes) : null;
-
-        $userToken = $user->createToken('Auth Token', expiresAt: $expirationTime);
+        $result = $action->execute($validated['email'], $validated['password']);
 
         return ApiResponse::success([
-            'user' => $user->toResource(),
+            'user' => $result->user->toResource(),
             'authorization' => [
-                'access_token' => $userToken->plainTextToken,
-                'token_type' => 'Bearer',
-                'expires_in' => $expirationMinutes
-                    ? $expirationMinutes * 60
-                    : null,
-                'expires_at' => $expirationTime,
+                'access_token' => $result->authorization->accessToken,
+                'token_type' => $result->authorization->tokenType,
+                'expires_in' => $result->authorization->expiresIn,
+                'expires_at' => $result->authorization->expiresAt,
             ],
         ], 'ورود با موفقیت انجام شد.');
     }
