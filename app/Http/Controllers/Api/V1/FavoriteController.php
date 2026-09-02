@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Actions\Favorite\CreateFavoriteAction;
+use App\Actions\Favorite\DestroyFavoriteAction;
+use App\Exceptions\Favorite\FavoriteAlreadyExistsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreFavoriteRequest;
 use App\Http\Responses\ApiResponse;
@@ -15,11 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FavoriteController extends Controller
 {
-    private const array MORPH_MAP = [
-        'movie' => Movie::class,
-        'series' => Series::class,
-    ];
-
     /**
      * Display a listing of the resource.
      */
@@ -155,6 +153,7 @@ class FavoriteController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @throws FavoriteAlreadyExistsException
      */
     #[OA\Post(
         path: "/api/v1/favorites",
@@ -250,33 +249,12 @@ class FavoriteController extends Controller
             ),
         ],
     )]
-    public function store(StoreFavoriteRequest $request)
+    public function store(StoreFavoriteRequest $request, CreateFavoriteAction $action)
     {
         $validated = $request->validated();
-
         $user = $request->user();
-        $id = $validated['id'];
-        $type = $validated['type'];
-        $modelClass = static::MORPH_MAP[$type];
 
-        $modelClass::findOrFail($id);
-
-        $favorite = $user->favorites()
-            ->where('favoritable_id', $id)
-            ->where('favoritable_type', $modelClass)
-            ->first();
-
-        if ($favorite) {
-            return ApiResponse::error(
-                message: 'این آیتم از قبل در لیست علاقه‌مندی‌های شما وجود دارد.',
-                code: Response::HTTP_CONFLICT,
-            );
-        }
-
-        $user->favorites()->create([
-            'favoritable_id' => $id,
-            'favoritable_type' => $modelClass,
-        ]);
+        $action->execute($user, $validated['id'], $validated['type']);
 
         return ApiResponse::created(message: 'آیتم به لیست علاقه‌مندی‌ها اضافه شد.');
     }
@@ -357,11 +335,11 @@ class FavoriteController extends Controller
             ),
         ],
     )]
-    public function destroy(Favorite $favorite)
+    public function destroy(Favorite $favorite, DestroyFavoriteAction $action)
     {
         Gate::authorize('delete', $favorite);
 
-        $favorite->delete();
+        $action->execute($favorite);
 
         return ApiResponse::deleted('آیتم با موفقیت از لیست علاقه‌مندی‌ها حذف شد.');
     }
