@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
-use App\Models\Movie;
+use App\Queries\Movie\GetMovieQuery;
+use App\Queries\Movie\GetMoviesQuery;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,36 +75,14 @@ class MovieController extends Controller
             ),
         ],
     )]
-    public function index(Request $request)
+    public function index(Request $request, GetMoviesQuery $query)
     {
-        $movies = Movie::query()
-            ->select([
-                'id',
-                'title',
-                'original_title',
-                'slug',
-                'release_year',
-                'release_date',
-                'duration_minutes',
-                'status',
-                'original_language_id',
-                'age_rating_id',
-            ])
-            ->with([
-                'media' => static fn($query) => $query->where('collection_name', 'poster'),
-                'ageRating',
-                'originalLanguage',
-                'countries',
-                'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
-            ])
-            ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
-            ->when($request->filled('search'), static fn($query) => $query->where(static function ($query) use ($request) {
-                $search = $request->search;
-                $query->where('title', 'like', "%$search%")
-                    ->orWhere('original_title', 'like', "%$search%");
-            }))
-            ->latest()
-            ->paginate();
+        $page = $request->input('page');
+
+        $movies = $query->execute(
+            $request->input('search'),
+            filter_var($page, FILTER_VALIDATE_INT) !== false ? (int)$page : 1,
+        );
 
         return ApiResponse::success($movies->toResourceCollection());
     }
@@ -162,30 +140,9 @@ class MovieController extends Controller
             ),
         ],
     )]
-    public function show(Request $request, string $slug)
+    public function show(Request $request, string $slug, GetMovieQuery $query)
     {
-        $movie = Movie::query()
-            ->with([
-                'media',
-                'ageRating',
-                'originalLanguage',
-                'languages',
-                'countries',
-                'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
-                'persons' => static fn($query) => $query->select(['people.id', 'name', 'original_name', 'slug'])->with('media'),
-                'videos' => static fn($query) => $query->where('is_active', true)->orderBy('sort_order'),
-                'videos.media',
-                'downloadGroups' => static fn($query) => $query->where('is_active', true)->orderBy('sort_order'),
-                'downloadGroups.downloadLinks' => static fn($query) => $query->with(['quality', 'encoder', 'codec', 'media']),
-            ])
-            ->withCount(['likes', 'dislikes'])
-            ->where('slug', $slug)
-            ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
-            ->firstOrFail();
-
-        $movie->user_reaction = $request->user('sanctum')
-            ? $movie->reactions()->where('user_id', $request->user()->id)->value('type')
-            : null;
+        $movie = $query->execute($slug, $request->user('sanctum'));
 
         return ApiResponse::success($movie->toResource()->withMedia());
     }
