@@ -9,8 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreFavoriteRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Favorite;
-use App\Models\Movie;
-use App\Models\Series;
+use App\Queries\Favorite\GetUserFavoritesQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use OpenApi\Attributes as OA;
@@ -90,63 +89,14 @@ class FavoriteController extends Controller
             ),
         ],
     )]
-    public function index(Request $request)
+    public function index(Request $request, GetUserFavoritesQuery $query)
     {
-        $favorites = $request->user()
-            ->favorites()
-            ->with([
-                'favoritable' => static function ($morphTo) {
-                    $morphTo->constrain([
-                        Movie::class => static function ($query) {
-                            $query
-                                ->select([
-                                    'id',
-                                    'title',
-                                    'original_title',
-                                    'slug',
-                                    'release_year',
-                                    'release_date',
-                                    'duration_minutes',
-                                    'status',
-                                    'original_language_id',
-                                    'age_rating_id',
-                                ])
-                                ->with([
-                                    'media' => static fn($query) => $query->where('collection_name', 'poster'),
-                                    'ageRating',
-                                    'originalLanguage',
-                                    'countries',
-                                    'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
-                                ]);
-                        },
-                        Series::class => static function ($query) {
-                            $query
-                                ->select([
-                                    'id',
-                                    'title',
-                                    'original_title',
-                                    'slug',
-                                    'release_year',
-                                    'release_date',
-                                    'end_date',
-                                    'publish_status',
-                                    'production_status',
-                                    'original_language_id',
-                                    'age_rating_id',
-                                ])
-                                ->with([
-                                    'media' => static fn($query) => $query->where('collection_name', 'poster'),
-                                    'ageRating',
-                                    'originalLanguage',
-                                    'countries',
-                                    'genres' => static fn($query) => $query->select(['id', 'name', 'slug'])->where('is_active', true),
-                                ]);
-                        },
-                    ]);
-                },
-            ])
-            ->latest()
-            ->paginate();
+        $page = $request->input('page');
+
+        $favorites = $query->execute(
+            $request->user(),
+            filter_var($page, FILTER_VALIDATE_INT) !== false ? (int)$page : 1,
+        );
 
         return ApiResponse::success($favorites->toResourceCollection());
     }
