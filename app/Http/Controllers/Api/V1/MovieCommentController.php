@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Comment\CreateCommentAction;
-use App\Enums\CommentStatus;
 use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\StoreMovieCommentRequest;
 use App\Http\Responses\ApiResponse;
-use App\Models\Comment;
 use App\Models\Movie;
-use App\Models\Reaction;
+use App\Queries\Comment\GetCommentsQuery;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,35 +92,20 @@ class MovieCommentController extends Controller
             ),
         ],
     )]
-    public function index(Request $request, string $slug)
+    public function index(Request $request, string $slug, GetCommentsQuery $query)
     {
         $movie = Movie::query()
             ->where('slug', $slug)
             ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
             ->firstOrFail();
 
-        $comments = $movie
-            ->comments()
-            ->when($request->user('sanctum'), static function ($query, $user) {
-                $query->addSelect([
-                    'user_reaction' => Reaction::query()
-                        ->select('type')
-                        ->whereColumn('reactionable_id', 'comments.id')
-                        ->where('reactionable_type', Comment::class)
-                        ->where('user_id', $user->id),
-                ]);
-            })
-            ->with(['user', 'allApprovedReplies'])
-            ->withCount(['likes', 'dislikes'])
-            ->whereNull('parent_id')
-            ->where('status', CommentStatus::Approved)
-            ->latest()
-            ->paginate()
-            ->through(static function (Comment $comment) {
-                $comment->user_reaction ??= null;
+        $page = $request->input('page');
 
-                return $comment;
-            });
+        $comments = $query->execute(
+            $movie,
+            $request->user('sanctum'),
+            filter_var($page, FILTER_VALIDATE_INT) !== false ? (int)$page : 1,
+        );
 
         return ApiResponse::success($comments->toResourceCollection());
     }
