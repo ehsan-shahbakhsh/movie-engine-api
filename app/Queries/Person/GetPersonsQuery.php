@@ -9,12 +9,14 @@ final class GetPersonsQuery
 {
     public function execute(?string $search, int $page = 1): LengthAwarePaginator
     {
-        return Person::query()
-            ->with('media')
-            ->when($search != null, static function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('original_name', 'like', "%$search%");
-            })
+        if (blank($search)) {
+            return Person::query()
+                ->with('media')
+                ->paginate(page: $page);
+        }
+
+        return Person::search($search)
+            ->query(static fn($query) => $query->with('media'))
             ->paginate(page: $page);
     }
 }
