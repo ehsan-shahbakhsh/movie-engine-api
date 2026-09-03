@@ -47,8 +47,7 @@ it('returns a paginated list of persons', function () {
 
 it('can search persons by name and original name', function () {
     Person::factory()
-        ->count(4)
-        ->sequence(
+        ->forEachSequence(
             ['name' => 'Christopher Nolan', 'original_name' => 'Not Related 1'],
             ['name' => 'Not Related 2', 'original_name' => 'Quentin Nolan'],
             ['name' => 'Steven Spielberg', 'original_name' => 'Not Related 3'],
@@ -61,8 +60,10 @@ it('can search persons by name and original name', function () {
     $response
         ->assertOk()
         ->assertJsonCount(2, 'data.items')
-        ->assertJsonPath('data.items.0.name', 'Christopher Nolan')
-        ->assertJsonPath('data.items.1.original_name', 'Quentin Nolan')
+        ->assertJsonFragments([
+            ['name' => 'Christopher Nolan'],
+            ['original_name' => 'Quentin Nolan'],
+        ])
         ->assertJsonStructure([
             'success',
             'code',
