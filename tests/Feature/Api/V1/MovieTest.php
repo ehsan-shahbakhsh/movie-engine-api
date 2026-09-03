@@ -117,10 +117,9 @@ it('excludes draft and archived movies from the list', function () {
 
 it('can search movies by title and original title', function () {
     Movie::factory()
-        ->count(4)
         ->for(AgeRating::factory()->state(['name' => 'PG-13']), 'ageRating')
         ->for(Language::factory()->state(['name' => 'Persian', 'code' => 'fa']), 'originalLanguage')
-        ->sequence(
+        ->forEachSequence(
             ['title' => 'Test Movie', 'original_title' => 'Not Related 1'],
             ['title' => 'Not Related 2', 'original_title' => 'Test 2'],
             ['title' => 'Inception', 'original_title' => 'Inception Orig'],
@@ -133,8 +132,10 @@ it('can search movies by title and original title', function () {
     $response
         ->assertOk()
         ->assertJsonCount(2, 'data.items')
-        ->assertJsonPath('data.items.0.title', 'Test Movie')
-        ->assertJsonPath('data.items.1.original_title', 'Test 2')
+        ->assertJsonFragments([
+            ['title' => 'Test Movie'],
+            ['original_title' => 'Test 2'],
+        ])
         ->assertExactJsonStructure([
             'success',
             'code',
