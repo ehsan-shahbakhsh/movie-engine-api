@@ -17,6 +17,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -41,6 +42,7 @@ class Movie extends Model implements HasMedia
     use HasFactory;
     use Sluggable;
     use InteractsWithMedia;
+    use Searchable;
 
     protected $casts = [
         'release_year' => 'integer',
@@ -48,6 +50,24 @@ class Movie extends Model implements HasMedia
         'duration_minutes' => 'integer',
         'status' => MovieStatus::class,
     ];
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'original_title' => $this->original_title,
+            'release_year' => $this->release_year,
+        ];
+    }
+
+    public function shouldBeSearchable(): bool
+    {
+        return in_array($this->status, [
+            MovieStatus::Published,
+            MovieStatus::ComingSoon,
+        ]);
+    }
 
     public function genres(): BelongsToMany
     {
