@@ -18,6 +18,7 @@ services:
             DB_DATABASE: movie_db
             DB_USERNAME: root
             DB_PASSWORD: root
+            REDIS_HOST: redis
         networks:
             - movie-net
 
@@ -32,6 +33,15 @@ services:
             MYSQL_ROOT_PASSWORD: root
         volumes:
             - db-data:/var/lib/mysql
+        networks:
+            - movie-net
+
+    redis:
+        image: redis:alpine
+        container_name: movie_redis
+        restart: always
+        ports:
+            - "6379:6379"
         networks:
             - movie-net
 
