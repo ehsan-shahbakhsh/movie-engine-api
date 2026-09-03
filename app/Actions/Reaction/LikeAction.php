@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\Movie;
 use App\Models\Series;
 use App\Models\User;
+use InvalidArgumentException;
 
 final class LikeAction
 {
@@ -19,6 +20,10 @@ final class LikeAction
 
     public function execute(User $user, int $modelId, string $modelType): ReactionResultData
     {
+        if (!array_key_exists($modelType, self::MORPH_MAP)) {
+            throw new InvalidArgumentException("Invalid reactionable type: {$modelType}");
+        }
+
         $modelClass = self::MORPH_MAP[$modelType];
 
         $model = $modelClass::findOrFail($modelId);
