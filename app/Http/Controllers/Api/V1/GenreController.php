@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Enums\MovieStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
-use App\Models\Genre;
 use App\Queries\Genre\GetGenresQuery;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,13 +39,7 @@ class GenreController extends Controller
     )]
     public function __invoke(GetGenresQuery $query)
     {
-        $genres = Genre::query()
-            ->where('is_active', true)
-            ->withCount(['movies' => static function ($query) {
-                $query->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon]);
-            }])
-            ->orderBy('sort_order')
-            ->get();
+        $genres = $query->execute();
 
         return ApiResponse::success($genres->toResourceCollection());
     }
