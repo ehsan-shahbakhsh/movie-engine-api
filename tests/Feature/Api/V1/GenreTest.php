@@ -19,7 +19,7 @@ it('returns the entire list of genres', function () {
     $response
         ->assertOk()
         ->assertJsonCount(20, 'data')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -30,6 +30,7 @@ it('returns the entire list of genres', function () {
                     'slug',
                     'description',
                     'movies_count',
+                    'series_count',
                 ],
             ],
             'meta',
@@ -55,7 +56,7 @@ it('returns only active genres', function () {
     $response
         ->assertOk()
         ->assertJsonCount(10, 'data')
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -66,6 +67,7 @@ it('returns only active genres', function () {
                     'slug',
                     'description',
                     'movies_count',
+                    'series_count',
                 ],
             ],
             'meta',
@@ -103,7 +105,7 @@ it('returns active genres in the correct order', function () {
             'data.8.name' => 'Genre 8',
             'data.9.name' => 'Genre 9',
         ])
-        ->assertJsonStructure([
+        ->assertExactJsonStructure([
             'success',
             'code',
             'message',
@@ -114,6 +116,7 @@ it('returns active genres in the correct order', function () {
                     'slug',
                     'description',
                     'movies_count',
+                    'series_count',
                 ],
             ],
             'meta',
