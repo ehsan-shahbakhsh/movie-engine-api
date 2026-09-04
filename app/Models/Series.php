@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\Commentable;
 use App\Enums\ReactionType;
 use App\Enums\SeriesProductionStatus;
 use App\Enums\SeriesPublishStatus;
@@ -39,7 +40,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
     'publish_status',
     'production_status',
 ])]
-class Series extends Model implements HasMedia
+class Series extends Model implements HasMedia, Commentable
 {
     /** @use HasFactory<SeriesFactory> */
     use HasFactory;

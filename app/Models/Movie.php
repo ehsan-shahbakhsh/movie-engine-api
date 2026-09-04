@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\Commentable;
 use App\Enums\MovieStatus;
 use App\Enums\ReactionType;
 use App\Http\Resources\Api\V1\MovieCollection;
@@ -36,7 +37,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
     'original_language_id',
     'status',
 ])]
-class Movie extends Model implements HasMedia
+class Movie extends Model implements HasMedia, Commentable
 {
     /** @use HasFactory<MovieFactory> */
     use HasFactory;
