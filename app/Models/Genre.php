@@ -29,6 +29,11 @@ class Genre extends Model
         return $this->belongsToMany(Movie::class);
     }
 
+    public function series(): BelongsToMany
+    {
+        return $this->belongsToMany(Series::class);
+    }
+
     /**
      * Return the sluggable configuration array for this model.
      *
