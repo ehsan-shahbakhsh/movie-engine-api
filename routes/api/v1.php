@@ -31,7 +31,7 @@ Route::get('series/{series:slug}', [SeriesController::class, 'show']);
 
 Route::prefix('auth')->group(function () {
     Route::post('register', RegisterController::class);
-    Route::post('login', LoginController::class); // TODO: add rate limit
+    Route::post('login', LoginController::class)->middleware('throttle:login');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('email/verification-notification', VerificationNotificationController::class)->middleware('throttle:1,10');
