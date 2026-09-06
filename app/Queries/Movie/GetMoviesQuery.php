@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class GetMoviesQuery
 {
-    public function execute(?string $search, int $page = 1): LengthAwarePaginator
+    public function execute(?string $search = null, int $page = 1, int $perPage = 15): LengthAwarePaginator
     {
         $columns = [
             'id', 'title', 'original_title', 'slug',
@@ -30,11 +30,11 @@ final class GetMoviesQuery
                 ->with($relations)
                 ->whereIn('status', [MovieStatus::Published, MovieStatus::ComingSoon])
                 ->latest()
-                ->paginate(page: $page);
+                ->paginate(perPage: $perPage, page: $page);
         }
 
         return Movie::search($search)
             ->query(static fn($query) => $query->select($columns)->with($relations))
-            ->paginate(page: $page);
+            ->paginate(perPage: $perPage, page: $page);
     }
 }
