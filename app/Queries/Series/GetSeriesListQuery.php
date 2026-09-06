@@ -8,7 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class GetSeriesListQuery
 {
-    public function execute(?string $search, int $page = 1): LengthAwarePaginator
+    public function execute(?string $search, int $page = 1, int $perPage = 15): LengthAwarePaginator
     {
         $columns = [
             'id', 'title', 'original_title', 'slug',
@@ -31,11 +31,11 @@ final class GetSeriesListQuery
                 ->with($relations)
                 ->whereIn('publish_status', [SeriesPublishStatus::Published, SeriesPublishStatus::ComingSoon])
                 ->latest()
-                ->paginate(page: $page);
+                ->paginate(perPage: $perPage, page: $page);
         }
 
         return Series::search($search)
             ->query(static fn($query) => $query->select($columns)->with($relations))
-            ->paginate(page: $page);
+            ->paginate(perPage: $perPage, page: $page);
     }
 }
