@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class GetUserWatchlistQuery
 {
-    public function execute(User $user, int $page = 1): LengthAwarePaginator
+    public function execute(User $user, int $page = 1, int $perPage = 15): LengthAwarePaginator
     {
         return $user
             ->watchlists()
@@ -65,6 +65,6 @@ final class GetUserWatchlistQuery
                 },
             ])
             ->latest()
-            ->paginate(page: $page);
+            ->paginate(perPage: $perPage, page: $page);
     }
 }
