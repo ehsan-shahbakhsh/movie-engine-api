@@ -42,7 +42,7 @@ class EpisodeResource extends JsonResource
             'episode_number' => $this->episode_number,
             'title' => $this->title,
             'synopsis' => $this->synopsis,
-            'air_date' => $this->air_date,
+            'air_date' => $this->air_date?->toDateString(),
             'duration_minutes' => $this->duration_minutes,
             'download_groups' => DownloadGroupResource::collection($this->whenLoaded('downloadGroups')),
         ];

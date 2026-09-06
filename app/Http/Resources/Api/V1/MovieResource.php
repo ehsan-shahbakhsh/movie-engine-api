@@ -112,7 +112,7 @@ class MovieResource extends JsonResource
             'synopsis' => $this->whenHas('synopsis'),
 
             'release_year' => $this->release_year,
-            'release_date' => $this->release_date,
+            'release_date' => $this->release_date?->toDateString(),
             'duration_minutes' => $this->duration_minutes,
             'status' => $this->status,
 

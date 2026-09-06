@@ -86,8 +86,8 @@ class PersonResource extends JsonResource
                 ];
             }),
 
-            'birth_date' => $this->whenHas('birth_date'),
-            'death_date' => $this->whenHas('death_date'),
+            'birth_date' => $this->whenHas('birth_date', fn() => $this->birth_date->toDateString()),
+            'death_date' => $this->whenHas('death_date', fn() => $this->death_date?->toDateString()),
             'biography' => $this->whenHas('biography'),
         ];
     }

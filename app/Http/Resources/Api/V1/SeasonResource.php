@@ -39,8 +39,8 @@ class SeasonResource extends JsonResource
             'id' => $this->id,
             'season_number' => $this->season_number,
             'title' => $this->title,
-            'release_date' => $this->release_date,
-            'end_date' => $this->end_date,
+            'release_date' => $this->release_date?->toDateString(),
+            'end_date' => $this->end_date?->toDateString(),
             'episodes' => EpisodeResource::collection($this->whenLoaded('episodes')),
         ];
     }
