@@ -34,6 +34,13 @@ class FavoriteController extends Controller
                 required: false,
                 schema: new OA\Schema(type: "integer", default: 1, minimum: 1),
             ),
+            new OA\Parameter(
+                name: "per_page",
+                description: "Items per page",
+                in: "query",
+                required: false,
+                schema: new OA\Schema(type: "integer", default: 15, maximum: 100, minimum: 1),
+            ),
         ],
         responses: [
             new OA\Response(
@@ -91,12 +98,10 @@ class FavoriteController extends Controller
     )]
     public function index(Request $request, GetUserFavoritesQuery $query)
     {
-        $page = $request->input('page');
+        $page = max($request->integer('page', 1), 1);
+        $perPage = min(max($request->integer('per_page', 15), 1), 100);
 
-        $favorites = $query->execute(
-            $request->user(),
-            filter_var($page, FILTER_VALIDATE_INT) !== false ? (int)$page : 1,
-        );
+        $favorites = $query->execute($request->user(), $page, $perPage);
 
         return ApiResponse::success($favorites->toResourceCollection());
     }
