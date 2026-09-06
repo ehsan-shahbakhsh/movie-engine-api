@@ -12,7 +12,7 @@ use InvalidArgumentException;
 
 final class GetCommentsQuery
 {
-    public function execute(Model $commentable, ?User $user, int $page = 1): LengthAwarePaginator
+    public function execute(Model $commentable, ?User $user, int $page = 1, int $perPage = 15): LengthAwarePaginator
     {
         if (!method_exists($commentable, 'comments')) {
             throw new InvalidArgumentException(
@@ -36,7 +36,7 @@ final class GetCommentsQuery
             ->whereNull('parent_id')
             ->where('status', CommentStatus::Approved)
             ->latest()
-            ->paginate(page: $page)
+            ->paginate(perPage: $perPage, page: $page)
             ->through(static function (Comment $comment) {
                 $comment->user_reaction ??= null;
 
