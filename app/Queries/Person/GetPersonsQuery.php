@@ -7,7 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final class GetPersonsQuery
 {
-    public function execute(?string $search, int $page = 1): LengthAwarePaginator
+    public function execute(?string $search, int $page = 1, int $perPage = 15): LengthAwarePaginator
     {
         if (blank($search)) {
             return Person::query()
@@ -17,6 +17,6 @@ final class GetPersonsQuery
 
         return Person::search($search)
             ->query(static fn($query) => $query->with('media'))
-            ->paginate(page: $page);
+            ->paginate(perPage: $perPage, page: $page);
     }
 }
